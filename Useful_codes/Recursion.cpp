@@ -55,13 +55,9 @@ long long power(long long N, int R, long long res = 1)
 {
     //Your code here
     if (R == 0)
-    {
         return res % mod;
-    }
     if (R % 2 == 1)
-    {
         res = (res * N) % mod;
-    }
     return power((N * N) % mod, R / 2, res);
 }
 
