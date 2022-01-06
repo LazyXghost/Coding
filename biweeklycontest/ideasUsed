@@ -1,0 +1,24 @@
+GRAPHS TOPICS-:
+
+no of connected components in undirected graph
+diameter of graph and dynamic diameter(finding center of graph, bfs on end points of diameter)
+BFS depending upon the another array
+bipartite graph
+finding cycle in directed graph and topo sort
+Kosarajus algorithm - SCC
+
+
+
+
+
+BIWEEKLY ROUND-2 SOLUTIONS-:
+
+A -> made a recursion call if concurrent vertices have cat the reduce the allowed cat by 1 otherwise restore allowed cats to original ------ COULD ALSO BE DONE BY QUEUE
+B -> each vertic in cyclic component have only two edge
+C -> found diameter of graph
+D -> mapped letters to extra 26 vertices created
+E -> found center of graph and then took max of each element in depth array in case there are two center in graph and then applied logic ------ COULD ALSO BE DONE BY BFS ON END POINTS OF diameter
+F -> pushed each vertex coming in array in queue and check if next element coming is child of front vertex and also used sizes(no of childs of parent) stored at the time of bfs from source vertex
+G -> first build the graph for strings, then checked if cycle exist and then did topo sort for loop running from z to a letter(TOPO SORT ab component, before xyz component)
+H -> similar question as bipartite graphs, so divided it in bipartite graphs
+J -> Kosarajus algorithm

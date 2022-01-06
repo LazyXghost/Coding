@@ -1,110 +1,164 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// typedef is used to give datatype a newname
+// typedef gives datatype a newname
 typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
-typedef vector<vector<int>> vvi;
 
-// define is used to give things an alias
+// define gives things an alias
+typedef long double ld;
+#define p(a, b) pair<a, b>
+#define v(a) vector<a>
+#define q(a) queue<a>
+#define st(a) stack<a>
+#define s(a) set<a>
+#define ms(a) multiset<a>
+#define us(a) unordered_set<a>
+#define m(a, b) map<a, b>
+#define mm(a, b) multimap<a, b>
+#define um(a, b) unordered_map<a, b>
+
 #define FASTIO ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 #define fill(start, end, val) fill(start, end, val)
+#define fill(start, end, val) fill(start, end, val)
+#define removeScientific cout << fixed;
+#define precision(a) cout << setprecision(a);
 
 #define tests(t) \
     int t;       \
     cin >> t;    \
     while (t--)
-#define loop(i, a, b) for (int i = a; i <= b; i++)
-#define loopreverse(i, a, b) for (int i = a; i >= b; i--)
+#define loop(i, a, b, inc) for (int i = a; i <= b; i += inc)
 #define iteratorloop(v, i) for (auto i = v.begin(); i != v.end(); i++)
-#define iteratorloopreverse(v, i) for (auto i = v.end() - 1; i != v.begin() - 1; i--)
+#define val(x) (*(x))
+
 #define printArray(arr, n, i)   \
     for (int i = 0; i < n; i++) \
     {                           \
-        print(arr[i]);          \
+        cout << arr[i];         \
         space;                  \
     }                           \
     newline;
-#define inputArray(arr, n, i)   \
-    for (int i = 0; i < n; i++) \
-    {                           \
-        input(arr[i])           \
-    }
 #define printVector(v, i)                       \
     for (auto i = v.begin(); i != v.end(); i++) \
     {                                           \
-        print(val(i));                          \
+        cout << val(i);                         \
         space;                                  \
     }                                           \
     newline;
-#define inputVector(v, n, i)    \
-    for (int i = 0; i < n; i++) \
-    {                           \
-        int x;                  \
-        input(x);               \
-        v.push_back(x);         \
-    }
-#define val(x) (*(x))
-
-#define print(x) cout << x;
-#define input(x) cin >> x;
 #define space cout << " ";
 #define newline cout << "\n";
 
 const ll MOD = 1e9 + 7;
+const ll INF = 1e15;
 
-bool comparator(pii a, pii b)
+class sorting
 {
-    return (a.second < b.second);
-}
+    string func = "";
+    int order = 1;
 
-// fill funtion can be used to fill anything with a value
-// fill(arr, arr+n, {FILLING VALUE})
-// fill(v.begin(),v.end(),{FILLING VALUE})
-// vector<int> v({SIZE OF VECTOR}, {FILLING VALUE})
-// vector<int> v({SIZE OF VECTOR})
+public:
+    sorting(string a = "", int b = 1)
+    {
+        func = a;
+        order = b;
+    }
+    void sortOnBasis(vector<int> &first, vector<int> &second)
+    {
+        int n = first.size();
+        vector<int> indices(n), firstsorted(n), secondsorted(n);
+        iota(indices.begin(), indices.end(), 0);
+        sort(indices.begin(), indices.end(), [&](int A, int B) -> bool
+             {
+            bool res;
+            if (func == "")
+                res = second[A] < second[B];
+            else{
+                if(func == "-")
+                    res = second[A]-first[A] < second[B]-first[B];
+                else if(func == "+")
+                    res = second[A]+first[A] < second[B]+first[B];
+                else{
+                    // custom function
+                }
+            }
+            if(order == -1)
+                res = 1 - res;
+            return res; });
+        for (int i = 0; i < n; i++)
+        {
+            firstsorted[i] = first[indices[i]];
+            secondsorted[i] = second[indices[i]];
+        }
+        first = firstsorted;
+        second = secondsorted;
+    }
+};
 
+struct hash_pair
+{
+    template <class T1, class T2>
+    size_t operator()(const pair<T1, T2> &p) const
+    {
+        auto hash1 = hash<T1>{}(p.first);
+        auto hash2 = hash<T2>{}(p.second);
+        return hash1 ^ hash2;
+    }
+    // unordered_map<pair<int,int>,int,HASH>mp;
+};
+
+struct solution
+{
+    int n;
+    multimap<int, pair<int, int>> mp;
+    v(int) left, right;
+    solution()
+    {
+        cin >> n;
+        v(int) checked(n + 1, 0);
+        int x, y;
+        loop(i, 0, n - 1, 1)
+        {
+            cin >> x >> y;
+            left.push_back(x);
+            right.push_back(y);
+        }
+        sorting sorter("-");
+        sorter.sortOnBasis(left, right);
+        v(v(int)) ans;
+        loop(i,0,n-1,1)
+        {
+            int l = left[i], r = right[i];
+            v(int) tp;
+            loop(i, l, r, 1)
+            {
+                if (checked[i] == 0)
+                {
+                    checked[i] = 1;
+                    tp.push_back(l);
+                    tp.push_back(r);
+                    tp.push_back(i);
+                    ans.push_back(tp);
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < ans.size(); i++)
+        {
+            iteratorloop(ans[i], j){
+                cout<<val(j);
+                space;
+            }
+            newline;
+        }
+        newline;
+    }
+};
 int main()
 {
     FASTIO;
     tests(t)
     {
-        int n;
-        input(n);
-        int l[n], r[n];
-        loop(i, 0, n - 1)
-        {
-            input(l[i]);
-            input(r[i]);
-        }
-
-        int checked[n] = {0};
-        multimap<int, pii> gap;
-        loop(i, 0, n - 1)
-        {
-            gap.insert({r[i] - l[i], {l[i], r[i]}});
-        }
-        iteratorloop(gap, i)
-        {
-            int left = val(i).second.first;
-            int right = val(i).second.second;
-            loop(j, left, right)
-            {
-                if (checked[j-1] == 0)
-                {
-                    checked[j-1] = 1;
-                    print(left);
-                    space;
-                    print(right);
-                    space;
-                    print(j);
-                    newline;
-                    break;
-                }
-            }
-        }
-        newline;
+        solution sol;
     }
     return 0;
 }

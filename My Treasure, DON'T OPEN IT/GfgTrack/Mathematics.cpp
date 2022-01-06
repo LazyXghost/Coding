@@ -12,6 +12,7 @@
 #define printvector(v) forvi(v){cout<<val(i)<' ';}
 
 using namespace std;
+const ll MOD = 1e9;
 
 // {Eucledian Algorith-To find GCD of two numbers
 int gcd(int a,int b){
@@ -102,13 +103,14 @@ int NoOfDigits(int n)
 {
     return (int)(log10(n) + 1);
 }
-int power(int n,int r){
-    int res = 1;
-    while(r>0){
-        if(n&1)
-            res*=n;
-        r = r>>1;
-        n = n*n;
+ll power(int x,int y){
+    ll res = 1;
+    x = x%MOD;
+    while(y>0){
+        if(y&1)
+            res=(res*x)%MOD;
+        y = y>>1;
+        x = (x*x)%MOD;
     }
     return res;
 }

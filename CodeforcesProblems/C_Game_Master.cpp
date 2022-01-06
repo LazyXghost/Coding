@@ -1,63 +1,71 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// typedef is used to give datatype a newname
+// typedef gives datatype a newname
 typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
-typedef vector<vector<int>> vvi;
 
-// define is used to give things an alias
+// define gives things an alias
+typedef long double ld;
+#define p(a, b) pair<a, b>
+#define v(a) vector<a>
+#define q(a) queue<a>
+#define st(a) stack<a>
+#define s(a) set<a>
+#define ms(a) multiset<a>
+#define us(a) unordered_set<a>
+#define m(a, b) map<a, b>
+#define mm(a, b) multimap<a, b>
+#define um(a, b) unordered_map<a, b>
+
 #define FASTIO ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 #define fill(start, end, val) fill(start, end, val)
+#define fill(start, end, val) fill(start, end, val)
+#define removeScientific cout << fixed;
+#define precision(a) cout << setprecision(a);
 
 #define tests(t) \
     int t;       \
     cin >> t;    \
     while (t--)
-#define loop(i, a, b) for (int i = a; i <= b; i++)
-#define loopreverse(i, a, b) for (int i = a; i >= b; i--)
+#define loop(i, a, b, inc) for (int i = a; i <= b; i += inc)
 #define iteratorloop(v, i) for (auto i = v.begin(); i != v.end(); i++)
-#define iteratorloopreverse(v, i) for (auto i = v.end() - 1; i != v.begin() - 1; i--)
+#define val(x) (*(x))
+
 #define printArray(arr, n, i)   \
     for (int i = 0; i < n; i++) \
     {                           \
-        print(arr[i]);          \
+        cout << arr[i];         \
         space;                  \
     }                           \
     newline;
-#define inputArray(arr, n, i)   \
-    for (int i = 0; i < n; i++) \
-    {                           \
-        input(arr[i])           \
-    }
 #define printVector(v, i)                       \
     for (auto i = v.begin(); i != v.end(); i++) \
     {                                           \
-        print(val(i));                          \
+        cout << val(i);                         \
         space;                                  \
     }                                           \
     newline;
-#define inputVector(v, n, i)    \
-    for (int i = 0; i < n; i++) \
-    {                           \
-        int x;                  \
-        input(x);               \
-        v.push_back(x);         \
-    }
-#define val(x) (*(x))
-
-#define print(x) cout << x
-#define input(x) cin >> x
-#define space cout << " "
-#define newline cout << "\n"
+#define space cout << " ";
+#define newline cout << "\n";
 
 const ll MOD = 1e9 + 7;
+const ll INF = 1e15;
 
-bool comparator(pii a, pii b)
+bool comparator(p(int, int) a, p(int, int) b)
 {
-    return (a.second > b.second);
+    return (a.first < b.first);
 }
+
+struct hash_pair
+{
+    template <class T1, class T2>
+    size_t operator()(const pair<T1, T2> &p) const
+    {
+        auto hash1 = hash<T1>{}(p.first);
+        auto hash2 = hash<T2>{}(p.second);
+        return hash1 ^ hash2;
+    }
+};
 
 // fill funtion can be used to fill anything with a value
 // fill(arr, arr+n, {FILLING VALUE})
@@ -65,107 +73,88 @@ bool comparator(pii a, pii b)
 // vector<int> v({SIZE OF VECTOR}, {FILLING VALUE})
 // vector<int> v({SIZE OF VECTOR})
 
-void findWinners(vi a, vi b, int n)
+struct solution
 {
-    char winners[n];
-    loop(i, 0, n - 1)
+    int n;
+    v(p(int, int)) arr, brr;
+    v(bool) winners;
+    um(int, int) am, bm;
+    solution()
     {
-        winners[i] = '0';
-    }
-
-    if (n == 1)
-    {
-        winners[0] = '1';
-    }
-    else
-    {
-        unordered_set<int> alrwin;
-        int curwin = -1, lstwin = -1, psize;
-        auto ait = a.begin(), bit = b.begin();
-
-        curwin = val(ait);
-        winners[curwin] = '1';
-        alrwin.insert(curwin);
-        psize = 1;
-
-        while (true)
+        cin >> n;
+        winners.resize(n + 1, false);
+        loop(i, 0, n - 1, 1)
         {
-            while (bit != b.end() && val(bit) != curwin)
-            {
-                int tempwin = val(bit);
-                if (alrwin.find(tempwin) == alrwin.end())
-                {
-                    lstwin = val(bit);
-                    winners[lstwin] = '1';
-                    alrwin.insert(lstwin);
-                }
-                bit++;
-            }
-            if (lstwin != -1)
-                curwin = lstwin;
+            int x;
+            cin >> x;
+            arr.push_back({x, i + 1});
+        }
+        loop(i, 0, n - 1, 1)
+        {
+            int x;
+            cin >> x;
+            brr.push_back({x, i + 1});
+        }
+        doPreWork();
+        findAnswer();
+    }
+    void doPreWork(){
+        sort(arr.begin(), arr.end(), comparator);
+        sort(brr.begin(), brr.end(), comparator);
 
-            while (ait != a.end() && val(ait) != curwin)
-            {
-                int tempwin = val(ait);
-                if (alrwin.find(tempwin) == alrwin.end())
-                {
-                    lstwin = val(ait);
-                    winners[lstwin] = '1';
-                    alrwin.insert(lstwin);
-                }
-                ait++;
-            }
-            if (lstwin != -1)
-                curwin = lstwin;
-
-            if (alrwin.size() == psize)
-                break;
-            else
-                psize = alrwin.size();
+        loop(i, 0, n - 1, 1)
+        {
+            cout<<arr[i].second<<" "<<brr[i].second;
+            newline;
+            am.insert({arr[i].second, i});
+            bm.insert({brr[i].second, i});
         }
     }
+    void findAnswer(){
+        int i, j;
+        int p1, p2, mni, mnj;
 
-    loop(i, 0, n - 1)
-    {
-        print(winners[i]);
+        i = n - 1;
+        p1 = arr[i].second;
+        winners[p1] = true;
+        mnj = bm[p1];
+
+        j = n - 1;
+        p2 = brr[j].second;
+        winners[p2] = true;
+        mni = am[p2];
+
+        while (i >= mni || j >= mnj)
+        {
+            while (j >= mnj)
+            {
+                p2 = brr[j].second;
+                winners[p2] = true;
+                mni = min(mni, am[p2]);
+                j--;
+            }
+            while (i >= mni)
+            {
+                p1 = arr[i].second;
+                winners[p1] = true;
+                mni = min(mni, bm[p1]);
+                i--;
+            }
+        }
+
+        loop(i, 1, n, 1)
+        {
+            cout << winners[i];
+        }
+        newline;
     }
-    newline;
-}
-
+};
 int main()
 {
     FASTIO;
     tests(t)
     {
-        int n;
-        input(n);
-        vector<pii> a, b;
-        loop(i, 0, n - 1)
-        {
-            int x;
-            input(x);
-            a.push_back({i, x});
-        }
-        loop(i, 0, n - 1)
-        {
-            int x;
-            input(x);
-            b.push_back({i, x});
-        }
-        sort(a.begin(), a.end(), comparator);
-        sort(b.begin(), b.end(), comparator);
-        vi arr, brr;
-        iteratorloop(a, i)
-        {
-            arr.push_back(val(i).first);
-        }
-        iteratorloop(b, i)
-        {
-            brr.push_back(val(i).first);
-        }
-        a.clear();
-        b.clear();
-        findWinners(arr, brr, n);
+        solution sol;
     }
     return 0;
 }
