@@ -103,14 +103,15 @@ int NoOfDigits(int n)
 {
     return (int)(log10(n) + 1);
 }
-ll power(int x,int y){
+ll power(ll x,ll y){
     ll res = 1;
-    x = x%MOD;
     while(y>0){
         if(y&1)
-            res=(res*x)%MOD;
+            res=(res*x);
+            // res=(res*x)%MOD;
         y = y>>1;
-        x = (x*x)%MOD;
+        x = x*x;
+        // x = (x*x)%MOD;
     }
     return res;
 }
