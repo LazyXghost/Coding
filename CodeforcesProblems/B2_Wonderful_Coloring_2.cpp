@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -84,15 +85,15 @@ public:
         func = a;
         order = b;
     }
-    void singleSort(vector<int> &first)
+    void singleSort(vvi &first)
     {
-        sort(first.begin(), first.end(), [&](int A, int B) -> bool
+        sort(first.begin(), first.end(), [&](vi A, vi B) -> bool
              {
             bool res;
             if(order == -1)
-                res = A>B;
+                res = A.size()>B.size();
             else
-                res = A<B;
+                res = A.size()<B.size();
             return res; });
     }
     void sortOnBasis(vector<int> &first, vector<int> &second)
@@ -170,34 +171,72 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n, k;
+    um(int, st(int)) storage;
+    um(int, st(int)) paint;
+    um(int, int) res;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n >> k;
+        loop(i, 0, n - 1, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
+            int x;
+            cin >> x;
+            if (storage[x].size() < k)
+                storage[x].push(i);
         }
-        cout << res;
+        int color = 1;
+        while (storage.size())
+        {
+            int i = val(storage.begin()).first;
+            while (storage[i].size())
+            {
+                paint[color].push(storage[i].top());
+                storage[i].pop();
+                color = (color + 1) % k;
+                if(color == 0)
+                    color = k;
+            }
+            storage.erase(i);
+        }
+        int mn = INT_MAX;
+        loop(i, 1, k, 1)
+        {
+            int x = paint[i].size();
+            mn = min(x, mn);
+        }
+        loop(i, 1, k, 1)
+        {
+            if (paint[i].size() > mn)
+                paint[i].pop();
+            while (paint[i].size())
+            {
+                res[paint[i].top()] = i;
+                paint[i].pop();
+            }
+            paint.erase(i);
+        }
+        loop(i, 0, n-1, 1)
+                cout
+            << res[i] << " ";
         newline;
-
     }
 };
 int main()

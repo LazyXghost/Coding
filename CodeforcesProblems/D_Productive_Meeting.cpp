@@ -170,34 +170,96 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n;
+    v(int) arr, ind;
+    vpii res;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        pre();
+        int i = 0;
+        while (arr[i] == 0)
+            i++;
+
+        while (i != n - 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
+            int j = n - 1;
+            while (arr[j] >= arr[j - 1] && i != n - 1)
             {
-                res = "YES";
-                break;
+                res.push_back({ind[i], ind[j]});
+                arr[j]--;
+                arr[i]--;
+                if (arr[i] == 0)
+                    i++;
+                check(i, j);
             }
-            healthCost++;
+            j--;
+            check(i, j);
+            while (j != n - 1 && arr[j] > arr[j + 1] && i != n - 1)
+            {
+                res.push_back({ind[i], ind[j]});
+                arr[j]--;
+                j--;
+                arr[i]--;
+                if (arr[i] == 0)
+                    i++;
+                check(i, j);
+            }
         }
-        cout << res;
+        display();
+    }
+    void check(int &i, int &j)
+    {
+        if (arr[i] > arr[n - 1])
+        {
+            swap(arr[i], arr[n - 1]);
+            swap(ind[i], ind[n - 1]);
+            if (arr[i] == 0)
+                i++;
+            j = n - 1;
+        }
+    }
+    void pre()
+    {
+        cin >> n;
+        loop(i, 0, n - 1, 1)
+        {
+            int x;
+            cin >> x;
+            ind.push_back(i + 1);
+            arr.push_back(x);
+        }
+        sorting sorter;
+        sorter.sortOnBasis(ind, arr);
+    }
+    void display()
+    {
+        int size = res.size();
+        cout << size;
         newline;
-
+        loop(i, 0, size - 1, 1)
+        {
+            cout << min(res[i].first, res[i].second);
+            space;
+            cout << max(res[i].first, res[i].second);
+            newline;
+        }
     }
 };
 int main()

@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,65 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n;
+    v(int) arr;
+    vi dp;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n;
+        dp.resize(n, -1);
+        loop(i, 0, n - 1, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
+            int x;
+            cin >> x;
+            arr.push_back(x);
         }
+        int res = 0;
+        loop(i, 1, n, 1)
+            res = max(res, 1 + findResult(i));
         cout << res;
         newline;
+    }
+    int findResult(int ind)
+    {
+        if (dp[ind - 1] != -1)
+            return dp[ind - 1];
 
+        int tempres = 0, mul = 2;
+        while (ind * mul <= n)
+        {
+            if (arr[ind * mul - 1] > arr[ind - 1])
+                tempres = max(tempres, 1 + findResult(ind * mul));
+            mul++;
+        }
+        return dp[ind - 1] = tempres;
+    }
+    int maxvalue(int ind)
+    {
+        int ct = 1;
+        while (ind * 2 < n)
+        {
+            ct++;
+            ind *= 2;
+        }
+        return ct;
     }
 };
 int main()

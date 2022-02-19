@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,54 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int x, ep, op;
+    string res;
+    bool isPrime(int n)
+    {
+        if (n == 2 || n == 3)
+        {
+            return true;
+        }
+        else if (n == 1 || n % 2 == 0 || n % 3 == 0)
+        {
+            return false;
+        }
+        for (int i = 5; i * i <= n; i += 6)
+        {
+            if (n % i == 0 || n % (i + 2) == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
-        {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
+        cin >> x;
+        if (x == 1 || (x != 2 && x == power(2, log2(x))) || (x % 2 == 0 && isPrime(x / 2)))
+            res = "FastestFinger";
+        else
+            res = "Ashishgup";
 
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
-        }
         cout << res;
         newline;
-
     }
 };
 int main()

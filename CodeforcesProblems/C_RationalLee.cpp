@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,69 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n, k;
+    v(int) a, w;
+    v(pii) mnmx;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n >> k;
+        loop(i, 0, n - 1, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
+            int x;
+            cin >> x;
+            a.push_back(x);
+        }
+        loop(i, 0, k - 1, 1)
+        {
+            int x;
+            cin >> x;
+            w.push_back(x);
+        }
+        sorting sorter;
+        sorter.singleSort(a);
+        sorter.singleSort(w);
 
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
+        int ai = n - 1;
+        int wi = 0;
+        loop(i, 0, k - 1, 1)
+        {
+            mnmx.push_back({a[ai], a[ai]});
+            ai--;
+            w[i]--;
+            if (w[i] == 0)
+                wi++;
+        }
+        loop(i, wi, k - 1, 1)
+        {
+            ai -= w[i] - 1;
+            mnmx[i].second = a[ai];
+            ai--;
+        }
+
+        ll res = 0;
+        loop(i, 0, k - 1, 1)
+        {
+            res += mnmx[i].first + mnmx[i].second;
         }
         cout << res;
         newline;
-
     }
 };
 int main()

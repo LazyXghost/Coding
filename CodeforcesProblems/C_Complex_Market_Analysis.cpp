@@ -170,7 +170,7 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
-bool isPrime(int n)
+bool isPrime(ll n)
 {
     if (n == 2 || n == 3)
     {
@@ -194,6 +194,8 @@ struct solution
 {
     int n, e;
     v(int) arr;
+    us(int) checked;
+    ll res = 0;
     solution()
     {
         cin >> n >> e;
@@ -203,68 +205,32 @@ struct solution
             cin >> x;
             arr.push_back(x);
         }
-        int res = 0;
+
         loop(i, 0, n - 1, 1)
         {
-            cout<<"For i = "<<i;
-            newline;
-            bool state = 0;
-            int currind = i;
-            int currno = arr[i];
-            if (currno != 1)
-                state = 1;
-            while (currind + e <= n)
+            int j = i;
+            if (checked.find(j) == checked.end())
             {
-                currind = currind + e;
-                cout << "\t";
-                cout << "Checking for index =" << currind;
-                newline;
-                if (state == 0)
+                ll precount = -1, count = 0;
+                while (j < n)
                 {
-                    cout << "\t";
-                    cout << "State is all are 1";
-                    newline;
-                    if (arr[currind] != 1)
+                    checked.insert(j);
+                    if (arr[j] == 1)
+                        count++;
+                    else if (isPrime(arr[j]))
                     {
-                        cout << "\t";
-                        cout << "Number is not equal to 1";
-                        newline;
-                        if (isPrime(arr[currind]))
-                        {
-                            cout << "\t";
-                            cout << "Number is prime so increasing res";
-                            newline;
-                            state = 1;
-                            res++;
-                        }
-                        else
-                        {
-                            cout << "\t";
-                            cout << "No is not prime so breaking";
-                            newline;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    cout << "\t";
-                    cout << "State is we found some other no already";
-                    newline;
-                    if (arr[currind] == 1)
-                    {
-                        cout << "\t";
-                        cout << "Curr no is 1 so increasing res";
-                        newline;
-                        res++;
+                        if (precount != -1)
+                            res += precount + count + precount * count;
+                        precount = count;
+                        count = 0;
                     }
                     else
-                    {
-                        cout << "\t";
-                        cout << "Curr no is other than 1 , so breaking";
                         break;
-                    }
+                    j += e;
                 }
+
+                if (precount != -1)
+                    res += precount + count + precount * count;
             }
         }
         cout << res;
@@ -273,7 +239,7 @@ struct solution
 };
 int main()
 {
-    FASTIO;
+    // FASTIO;
     tests(t)
     {
         solution sol;

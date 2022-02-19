@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,66 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n;
+    vi arr;
+    st(int) odd, even;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n;
+        loop(i, 0, n - 1, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
+            int x;
+            cin >> x;
+            arr.push_back(x);
+        }
+        string res = "Yes";
+        loop(i, 0, n - 1, 1)
+        {
+            if (arr[i] % 2 == 0)
             {
-                res = "YES";
-                break;
+                if (even.size())
+                {
+                    if (even.top() > arr[i])
+                    {
+                        res = "No";
+                        break;
+                    }
+                }
+                even.push(arr[i]);
             }
-            healthCost++;
+            else
+            {
+                if (odd.size())
+                {
+
+                    if (odd.top() > arr[i])
+                    {
+                        res = "No";
+                        break;
+                    }
+                }
+                odd.push(arr[i]);
+            }
         }
         cout << res;
         newline;
-
     }
 };
 int main()

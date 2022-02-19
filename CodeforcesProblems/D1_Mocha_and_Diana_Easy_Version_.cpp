@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,42 +171,138 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
+class dsu
+{
+    um(int, int) parent, size;
 
+public:
+    // making new set by just initialising the parent of set as the same number
+    void make_set(int v)
+    {
+        parent[v] = v;
+        size[v] = 1;
+    }
+
+    // finding the root of the set
+    int find_set(int v)
+    {
+        if (v == parent[v])
+            return v;
+        // return find_set(parent[v]);
+
+        return parent[v] = find_set(parent[v]);
+        // 1st optimisization - path compression
+        // directly connects all the linear chain nodes to parent
+        // 7->5->3->1 ==> 7->1,5->1,3->1
+    }
+
+    // making the root of one set as the parent of root of other set will combine two sets
+    void union_set(int a, int b)
+    {
+        a = find_set(a);
+        b = find_set(b);
+        if (a != b)
+        {
+            // 2nd optimisation - union by size
+            if (size[a] < size[b])
+                swap(a, b);
+
+            parent[b] = a;
+            size[a] += size[b];
+        }
+    }
+
+    // returning the size of the set of vertex v
+    int find_size(int v)
+    {
+        return size[find_set(v)];
+    }
+};
+/*
+Time complexity -
+                            AFTER OPTIMISATION'S
+    FIND SET  - O(n)      O(alpha(n)) - almost constant
+    MAKE SET  - O(1)              O(1)
+    UNION SET - O(n)           O(alpha(n))
+*/
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n, m1, m2;
+    v(us(int)) mochagraph, dianagraph;
+    dsu mochadsu, dianadsu;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
-        {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
+        pre();
+        vpii res;
+        loop(u,1,n,1){
+            iteratorloop(mochagraph[u], j){
+                int v = val(j);
+                if(mochadsu.find_set(u)!=mochadsu.find_set(v) && dianadsu.find_set(u)!=dianadsu.find_set(v)){
+                    mochadsu.union_set(u,v);
+                    dianadsu.union_set(u,v);
+                    res.push_back({u,v});
+                }
             }
-            healthCost++;
         }
-        cout << res;
+        cout<<res.size();
         newline;
-
+        iteratorloop(res, i){
+            cout<<val(i).first;
+            space;
+            cout<<val(i).second;
+            newline;
+        }
+    }
+    void pre()
+    {
+        cin >> n >> m1 >> m2;
+        us(int) vertices;
+        loop(i,1,n,1){
+            vertices.insert(i);
+        }
+        mochagraph.resize(n + 1,vertices);
+        dianagraph.resize(n + 1,vertices);
+        loop(i,1,n,1){
+            mochadsu.make_set(i);
+            dianadsu.make_set(i);
+            mochagraph[i].erase(i);
+            dianagraph[i].erase(i);
+        }
+        loop(i, 0, m1 - 1, 1)
+        {
+            int u, v;
+            cin >> u >> v;
+            mochadsu.union_set(u,v);
+            mochagraph[u].erase(v);
+            mochagraph[v].erase(u);
+        }
+        loop(i, 0, m2 - 1, 1)
+        {
+            int u, v;
+            cin >> u >> v;
+            dianadsu.union_set(u,v);
+            dianagraph[u].erase(v);
+            dianagraph[v].erase(u);
+        }
     }
 };
 int main()
 {
     FASTIO;
-    tests(t)
-    {
-        solution sol;
-    }
+    solution sol;
     return 0;
 }

@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,55 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n, x;
+    v(int) arr;
+    v(int) dp;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n >> x;
+        dp.resize(n, -1);
+        loop(i, 0, n - 1, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
+            int tmp;
+            cin >> tmp;
+            arr.push_back(tmp);
         }
+        sorting sorter;
+        sorter.singleSort(arr);
+
+        int res = 0;
+        loop(i, 0, n - 1, 1)
+            res = max(res, findResult(i));
         cout << res;
         newline;
+    }
+    int findResult(int ind)
+    {
+        if (ind > n)
+            return -1;
+        else if (ind == n)
+            return 0;
+        else if (dp[ind] != -1)
+            return dp[ind];
 
+        return dp[ind] = 1 + findResult(ind + ceil(x / (double)arr[ind]));
     }
 };
 int main()

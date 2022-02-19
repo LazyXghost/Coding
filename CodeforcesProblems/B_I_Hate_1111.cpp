@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,64 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
+um(int, bool) dp;
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int x;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
-        {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
-        }
-        cout << res;
+        cin >> x;
+        if (findIfWeCan(x))
+            cout << "YES";
+        else
+            cout << "NO";
         newline;
+    }
+    bool findIfWeCan(int x)
+    {
+        if(dp.find(x) != dp.end())
+            return dp[x];
 
+        if (x == 0)
+            return true;
+        else if (x < 11)
+            return false;
+
+        ll z = 0;
+        while (z <= x)
+            z = (z * 10) + 1;
+        bool res = false;
+        int multiplier = 0;
+
+        while (!res)
+        {
+            if (multiplier == 0)
+            {
+                z = (z - 1) / 10;
+                if (z < 11)
+                    break;
+                multiplier = x / z;
+            }
+            res = findIfWeCan(x - multiplier * z);
+            multiplier--;
+        };
+        dp[x] = res;
+        return res;
     }
 };
 int main()

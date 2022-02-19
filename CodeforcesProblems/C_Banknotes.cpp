@@ -170,34 +170,44 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(int x, int y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        y = y >> 1;
+        x = (x * x);
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    ll n, k;
+    v(int) arr;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n >> k;
+        loop(i, 0, n - 1, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
+            int x;
+            cin >> x;
+            arr.push_back(power(10, x));
+        }
+        k++;
+        ll res = 0;
+        loop(i, 0, n - 1, 1)
+        {
+            ll x = k;
+            if (i != n - 1)
+                x = min(arr[i + 1] / arr[i] - 1, (int)x);
+            res += arr[i] * x;
+            k -= x;
         }
         cout << res;
         newline;
-
     }
 };
 int main()

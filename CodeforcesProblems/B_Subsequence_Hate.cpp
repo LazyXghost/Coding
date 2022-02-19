@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,82 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
-
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    string s;
+    vi count;
+    int c = 1;
+    int res;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> s;
+
+        if (check(s))
+            cout << 0;
+        else
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
+            loop(i, 1, s.length() - 1, 1)
             {
-                res = "YES";
-                break;
-            }
-            healthCost++;
-        }
-        cout << res;
-        newline;
+                if (s[i] != s[i - 1])
+                {
+                    if (count.size() >= 2)
+                        c += count[count.size() - 2];
 
+                    count.push_back(c);
+                    c = 1;
+                }
+                else
+                    c++;
+            }
+            if (count.size() >= 2)
+                c += count[count.size() - 2];
+            count.push_back(c);
+
+
+            int res = INT_MAX;
+            loop(i, 0, count.size() - 1, 1)
+                res = min(res, findCurrent(i));
+            cout << res;
+        }
+            newline;
+    }
+    int findCurrent(int i)
+    {
+        int n = count.size(), current, leftsame, leftdifferent, rightsame, rightdifferent;
+
+        i >= 2 ? current = count[i] - count[i - 2] : current = count[i];
+        i >= 2 ? leftsame = count[i - 2] : leftsame = 0;
+        i >= 1 ? leftdifferent = count[i - 1] : leftdifferent = 0;
+        (n - 1 - i) % 2 == 0 ? rightsame = count[n - 1] - count[i] : rightsame = count[n - 2] - count[i];
+        (n - 1 - i) % 2 == 0 ? (i >= 1 ? rightdifferent = count[n - 2] - count[i - 1] : rightdifferent = count[n - 2]) : (i >= 1 ? rightdifferent = count[n - 1] - count[i - 1] : rightdifferent = count[n - 1]);
+
+        return min(leftdifferent + rightsame, leftsame + rightdifferent);
+    }
+    bool check(string s){
+        int zc=0,fc =0;
+        loop(i,0,s.length()-1,1){
+            if(s[i]=='1')
+                fc++;
+            else
+                zc++;
+        }
+        if(zc == 0 || fc==0)
+            return true;
+        return false;
     }
 };
 int main()

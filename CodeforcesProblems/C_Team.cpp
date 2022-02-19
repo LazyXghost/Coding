@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,42 +171,70 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n, m;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
-        {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
-        }
-        cout << res;
+        cin >> n >> m;
+        if (n > m + 1 || 2 * n + 2 < m)
+            cout << -1;
+        else
+            findAnswer(n, m);
         newline;
+    }
 
+    void findAnswer(int zero, int one)
+    {
+        if (one == 0 || zero == 0)
+        {
+            if (one == 0 && zero == 0)
+                return;
+            else if (one == 0)
+            {
+                cout << "0";
+                return findAnswer(zero - 1, one);
+            }
+            else
+            {
+                cout << "1";
+                return findAnswer(zero, one - 1);
+            }
+        }
+
+        if (zero < one - 1)
+        {
+            cout << "110";
+            findAnswer(zero - 1, one - 2);
+        }
+        else
+        {
+            if (zero > one)
+                cout << "01";
+            else
+                cout << "10";
+            findAnswer(zero - 1, one - 1);
+        }
     }
 };
 int main()
 {
     FASTIO;
-    tests(t)
-    {
-        solution sol;
-    }
+    solution sol;
     return 0;
 }

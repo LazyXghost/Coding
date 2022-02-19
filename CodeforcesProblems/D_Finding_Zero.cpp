@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,39 +171,93 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n;
+    vi query;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n;
+        int i = 1, j = 2, k = 3;
+        pii res;
+        res = QueryFuck(1, 2, 3, 4);
+        loop(ind, 6, n, 2)
+            res = QueryFuck(res.first, res.second, ind - 1, ind);
+        giveAnswer(res);
+    }
+    void giveAnswer(pii res)
+    {
+        if (n % 2 != 0)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
+            int x = 0;
+            loop(i, 1, n, 1)
             {
-                res = "YES";
-                break;
+                if (i != res.first && i != res.second && i != n)
+                {
+                    x = i;
+                    break;
+                }
             }
-            healthCost++;
+            res = QueryFuck(res.first,res.second,x,n);
         }
-        cout << res;
+        cout<<"! "<<res.first<<" "<<res.second;
         newline;
+    }
+    int queryCall(int a, int b, int c)
+    {
+        cout << "? " << a << " " << b << " " << c;
+        newline;
+        cout.flush();
+        int x;
+        cin >> x;
+        return x;
+    }
+    pii QueryFuck(int a, int b, int c, int d)
+    {
+        int first, second, third, fourth;
+        first = queryCall(a, b, c);
+        second = queryCall(b, c, d);
+        third = queryCall(a, b, d);
+        fourth = queryCall(a, c, d);
+        int mx = max(max(first, second), max(third, fourth));
 
+        vvi x;
+        if (first == mx)
+            x.push_back(vi{a, b, c});
+        if (second == mx)
+            x.push_back(vi{b, c, d});
+        if (third == mx)
+            x.push_back(vi{a, b, d});
+        if (fourth == mx)
+            x.push_back(vi{a, c, d});
+
+        vi commons, fs = x[0], ss = x[1];
+        us(int) hello;
+        iteratorloop(fs, i)
+            hello.insert(val(i));
+        iteratorloop(ss, i) if (hello.find(val(i)) != hello.end())
+            commons.push_back(val(i));
+        return {commons[0], commons[1]};
     }
 };
+
 int main()
 {
-    FASTIO;
     tests(t)
     {
         solution sol;

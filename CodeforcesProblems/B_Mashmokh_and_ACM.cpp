@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,42 +171,69 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n, k;
+    vvi choices;
+    vvi dp;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n >> k;
+        dp.resize(k+1, vi(n+1,-1));
+        choices.resize(n + 1);
+        loop(i, 1, n, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
+            int mul = 1;
+            while (i * mul <= n)
             {
-                res = "YES";
-                break;
+                if (i * mul != 1)
+                    choices[i].push_back(i * mul);
+                mul++;
             }
-            healthCost++;
+        }
+        int res = n;
+        loop(i, 2, k, 1)
+        {
+            res = (res + findAnswer(i)) % MOD;
         }
         cout << res;
         newline;
+    }
+    int findAnswer(int ind, int nc = 1)
+    {
+        if (ind == 1)
+            return choices[nc].size();
+        if(dp[ind][nc]!=-1)
+            return dp[ind][nc];
 
+        int tempres = 0;
+        int x = choices[nc].size();
+        loop(i, 0, x - 1, 1)
+        {
+            tempres = (tempres + findAnswer(ind - 1, choices[nc][i])) % MOD;
+        }
+        dp[ind][nc] = tempres;
+        return tempres;
     }
 };
 int main()
 {
     FASTIO;
-    tests(t)
-    {
-        solution sol;
-    }
+    solution sol;
     return 0;
 }

@@ -1,152 +1,248 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-// typedef is used to give datatype a newname
+// typedef gives datatype a newname
 typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
-typedef vector<vector<int>> vvi;
+typedef long double ld;
 
-// define is used to give things an alias
+// define gives things an alias
+#define p(a, b) pair<a, b>
+#define pii pair<int, int>
+
+#define v(a) vector<a>
+#define vv(a) vector<vector<a>>
+#define vi vector<int>
+#define vvi vector<vector<int>>
+#define vpii vector<pair<int, int>>
+#define vvpii vector<vector<pair<int, int>>>
+// vector<int> v({SIZE OF VECTOR})
+// vector<int> v({SIZE OF VECTOR}, {FILLING VALUE})
+
+#define pqmax(a) priority_queue<a>
+#define pqmin(a) priority_queue<a, vector<a>, greater<a>>
+#define pqcustom(a) priority_queue<a, vector<a>, pqComp>
+// by default priority queue is made max heap, to use min heap use greater or make custom comparator
+// priority_queue<int> - creates max heap
+// priority_queue<pair<int,int>> - ORDERING BY FIRST ELEMENT(if first elements are same then ordering by second elements)
+// priority_queue<pair<int,int>,vector<pair<int,int>>,{COMPARATOR}>
+
+#define q(a) queue<a>
+#define st(a) stack<a>
+#define s(a) set<a>
+#define ms(a) multiset<a>
+#define us(a) unordered_set<a>
+#define m(a, b) map<a, b>
+#define mm(a, b) multimap<a, b>
+#define um(a, b) unordered_map<a, b>
+
 #define FASTIO ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+
 #define fill(start, end, val) fill(start, end, val)
-
-#define tests(t) int t; cin >> t; while(t--)
-#define forloop(i, a, b) for (int i = a; i <= b; i++)
-#define forloopreverse(i, a, b) for (int i = a; i >= b; i--)
-#define vectorloop(v, i) for(auto i = v.begin();i!=v.end();i++)
-#define vectorloopreverse(v, i) for(auto i = v.end()-1;i!=v.begin()-1;i--)
-#define printArray(arr, n, i) for(int i = 0;i<n;i++){print(arr[i]);space;}newline;
-#define inputArray(arr, n, i) for(int i = 0;i<n;i++){input(arr[i])}
-#define printVector(v, i) for(auto i = v.begin();i!=v.end();i++){print(val(i));space;}newline;
-#define inputVector(v, n, i) for(int i = 0;i<n;i++){int x;input(x);v.push_back(x);}
-#define val(x) (*x)
-
-#define print(x) cout<<x;
-#define input(x) cin>>x;
-#define space cout<<" ";
-#define newline cout<< "\n";
-
-const ll MOD = 1e9 + 7;
-
+#define fill(start, end, val) fill(start, end, val)
 // fill funtion can be used to fill anything with a value
 // fill(arr, arr+n, {FILLING VALUE})
 // fill(v.begin(),v.end(),{FILLING VALUE})
-// vector<int> v({SIZE OF VECTOR}, {FILLING VALUE}) 
-// vector<int> v({SIZE OF VECTOR})
 
-void sieve(int n, vector<bool> isPrime)
+#define removeScientific cout << fixed;
+#define precision(a) cout << setprecision(a);
+
+#define tests(t) \
+    int t;       \
+    cin >> t;    \
+    while (t--)
+#define loop(i, a, b, inc) for (int i = a; i <= b; i += inc)
+#define iteratorloop(v, i) for (auto i = v.begin(); i != v.end(); i++)
+#define val(x) (*(x))
+
+#define printArray(arr, n, i)   \
+    for (int i = 0; i < n; i++) \
+    {                           \
+        cout << arr[i];         \
+        space;                  \
+    }                           \
+    newline;
+#define printVector(v, i)                       \
+    for (auto i = v.begin(); i != v.end(); i++) \
+    {                                           \
+        cout << val(i);                         \
+        space;                                  \
+    }                                           \
+    newline;
+#define space cout << " ";
+#define newline cout << "\n";
+
+const ll MOD = 1e9 + 7;
+const ll INF = 1e15;
+
+class sorting
 {
-    forloop(i, 2, n)
-        if (isPrime[i])
-            for (int j = i * i; j <= n; j += i)
-                isPrime[j] = false;
-}
+    string func = "";
+    int order = 1;
 
-void findColoring(vi a){
-    vector<bool> isPrime(1000+1, true);
-    sieve(1000, isPrime);
-    unordered_set<int> values;
-    int k = 2;
-    unordered_map<int,unordered_set<int>> connComponents;
-    vector<int> primes;
-    while(k!=999){
-        if(isPrime[k]){
-            unordered_set<int> singleConnComponent;
-            vectorloop(a,i){
-                if(val(i)%k == 0){
-                    singleConnComponent.insert(val(i));
-                    values.insert(val(i));
-                }
-            }
-            if(singleConnComponent.size()>0){
-                primes.push_back(k);
-                connComponents[k] = singleConnComponent;
-            }
-        }
-        k++;
-    }
-    vectorloop(connComponents, i){
-        print(val(i).first);
-        space;
-        space;
-        space;
-        vectorloop(val(i).second, j){
-            print(val(j));
-            space;
-        }
-        newline;
-    }
-    values.clear();
-    print(primes.size());
-    newline;
-    vectorloop(primes, i)
+public:
+    sorting(string a = "", int b = 1)
     {
-        // val(i) gives prime no
-        // cci is conn component of that prime no
-        unordered_set<int> cci = connComponents[val(i)];
-        auto lastj = cci.begin();
-        vectorloop(cci, j)
-        {
-            // val(j) gives value in conn component
-            auto k = i + 1;
-            vector<int> ccierase;
-            // val(k) gives prime no greater than val(i)
-            while (k != primes.end())
-            {
-                unordered_set<int> cck = connComponents[val(k)];
-                if (cck.find(val(j)) != cck.end())
-                {
-                    ccierase.push_back(val(j));
-                    break;
-                }
-                k++;
-            }
-            print("Size of ccierase is ");
-            print(ccierase.size());
-            newline;
-            vectorloop(ccierase,m){
-                print("Want to erase "<<val(m));
-                newline;
-                print("Value in cii is ");
-                print(val(cci.find(val(m))));
-                newline;
-                vectorloop(ccierase, z){
-                    print(val(z));
-                    space;
-                }
-                newline;
-                cci.erase(val(m));
-                j = lastj;
-            }
-            print("got out");
-            newline;
-            lastj = j;
-        }
-        if(cci.size()==0){
-            print("cci size is zero");
-            newline;
-            connComponents.erase(connComponents.find(val(i)));
-            i--;
-        }
+        func = a;
+        order = b;
     }
-    print(connComponents.size());
-    newline;
+    void singleSort(vector<int> &first)
+    {
+        sort(first.begin(), first.end(), [&](int A, int B) -> bool
+             {
+            bool res;
+            if(order == -1)
+                res = A>B;
+            else
+                res = A<B;
+            return res; });
+    }
+    void sortOnBasis(vector<int> &first, vector<int> &second)
+    {
+        int n = first.size();
+        vector<int> indices(n), firstsorted(n), secondsorted(n);
+        iota(indices.begin(), indices.end(), 0);
+        sort(indices.begin(), indices.end(), [&](int A, int B) -> bool
+             {
+            bool res;
+            if (func == ""){
+                if(order == 1)
+                    res = second[A] < second[B];
+                else
+                    res = second[A] > second[B];
+            }
+            else{
+                if(func == "-"){
+                    if(order == 1)
+                        res = second[A]-first[A] < second[B]-first[B];
+                    else
+                        res = second[A]-first[A] > second[B]-first[B];
+                }
+                else if(func == "+"){
+                    if(order == 1)
+                        res = second[A]+first[A] < second[B]+first[B];
+                    else
+                        res = second[A]+first[A] > second[B]+first[B];
+                }
+                else{
+                    if(order == 1){
+                        
+                    }
+                    else{
+                        
+                    }
+                    // custom function
+                    // res = abs(second[A]-first[A]) < abs(second[B]-first[B]);
+                }
+            }
+            return res; });
+        for (int i = 0; i < n; i++)
+        {
+            firstsorted[i] = first[indices[i]];
+            secondsorted[i] = second[indices[i]];
+        }
+        first = firstsorted;
+        second = secondsorted;
+    }
+};
+struct hash_pair
+{
+    template <class T1, class T2>
+    size_t operator()(const pair<T1, T2> &p) const
+    {
+        auto hash1 = hash<T1>{}(p.first);
+        auto hash2 = hash<T2>{}(p.second);
+        return hash1 ^ hash2;
+        // unordered_map<pair<int,int>,int,HASH>mp;
+    }
+};
+struct pqComp
+{
+    constexpr bool operator()(
+        pair<int, int> const &a,
+        pair<int, int> const &b)
+        const noexcept
+    {
+        return a.second < b.second; // max heap
+        // return a.second > b.second; //min heap
+    }
+};
+bool vComp(pair<int, int> a, pair<int, int> b)
+{
+    return a.first < b.first; // increasing order
+    // return a.first > b.first; // decreasing order
+}
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
 }
 
+struct solution
+{
+    int n;
+    v(int) arr;
+    vi primes{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31};
+    solution()
+    {
+        cin >> n;
+
+        um(int,vi) coloring;
+        iteratorloop(primes, i){
+            v(int) initialise;
+            coloring[val(i)] = initialise;
+        }
+        us(int) sat;
+        loop(i, 0, n - 1, 1)
+        {
+            int x;
+            cin >> x;
+            int y = findSet(x);
+            arr.push_back(y);
+            sat.insert(y);
+        }
+        vi outputMapping(12, 0);
+        loop(i,1,11,1){
+            if(sat.find(i)==sat.end())
+                outputMapping[i] = 1;
+        }
+        loop(i,1,11,1){
+            outputMapping[i]+=outputMapping[i-1];
+        }
+
+        vi res;
+        iteratorloop(arr, i){
+            res.push_back(val(i)-outputMapping[val(i)]);
+        }
+
+        cout<<sat.size();
+        newline;
+        printVector(res, i);
+    }
+    int findSet(int x){
+        loop(i,0,10,1){
+            if(x%primes[i] == 0)
+                return i+1;
+        }
+        return -1;
+    }
+};
 int main()
 {
-    // FASTIO;
-    tests(t){
-        int n;
-        input(n);
-        vi a;
-        forloop(i,0,n-1){
-            int x;
-            input(x);
-            a.push_back(x);
-        }
-        findColoring(a);
+    FASTIO;
+    tests(t)
+    {
+        solution sol;
     }
     return 0;
 }
+// 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31
+// 37

@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,108 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
+class dsu
+{
+    um(int, int) parent, size;
+
+public:
+    // making new set by just initialising the parent of set as the same number
+    void make_set(int v)
+    {
+        parent[v] = v;
+        size[v] = 1;
+    }
+
+    // finding the root of the set
+    int find_set(int v)
+    {
+        if (v == parent[v])
+            return v;
+        // return find_set(parent[v]);
+
+        return parent[v] = find_set(parent[v]);
+        // 1st optimisization - path compression
+        // directly connects all the linear chain nodes to parent
+        // 7->5->3->1 ==> 7->1,5->1,3->1
+    }
+
+    // making the root of one set as the parent of root of other set will combine two sets
+    void union_set(int a, int b)
+    {
+        a = find_set(a);
+        b = find_set(b);
+        if (a != b)
+        {
+            // 2nd optimisation - union by size
+            if (size[a] < size[b])
+                swap(a, b);
+
+            parent[b] = a;
+            size[a] += size[b];
+        }
+    }
+
+    // returning the size of the set of vertex v
+    int find_size(int v)
+    {
+        return size[find_set(v)];
+    }
+};
+/*
+Time complexity -
+                            AFTER OPTIMISATION'S
+    FIND SET  - O(n)      O(alpha(n)) - almost constant
+    MAKE SET  - O(1)              O(1)
+    UNION SET - O(n)           O(alpha(n))
+*/
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n;
+    v(int) arr;
+    dsu graph;
+    st(int) steck;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n;
+        loop(i, 1, n, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
+            graph.make_set(i);
         }
-        cout << res;
-        newline;
 
+        loop(i, 0, n - 1, 1)
+        {
+            int x;
+            cin >> x;
+            int y = x;
+            while (steck.size() && steck.top() > x)
+            {
+                graph.union_set(steck.top(), x);
+                y = max(y,steck.top());
+                steck.pop();
+            }
+            steck.push(y);
+        }
+        us(int) comp;
+        loop(i,1,n,1){
+            comp.insert(graph.find_set(i));
+        }
+        cout<<comp.size();
+        newline;
     }
 };
 int main()

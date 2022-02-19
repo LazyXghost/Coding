@@ -12,6 +12,7 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
@@ -170,34 +171,68 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n, k;
+    vi arr;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        cin >> n >> k;
+        loop(i, 0, n - 1, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
+            int x;
+            cin >> x;
+            int steps = x % k;
+            if (steps > 0)
+                arr.push_back(k - steps);
+        }
+        ll res;
+        if (arr.size() == 0)
+        {
+            res = 0;
+        }
+        else
+        {
+            sorting sorter;
+            sorter.singleSort(arr);
 
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
+            int mx1 = arr[0], mx2 = 1;
+            int count = 1;
+            n = arr.size();
+            loop(i, 1, n - 1, 1)
             {
-                res = "YES";
-                break;
+                if (arr[i] == arr[i - 1])
+                    count++;
+                else
+                    count = 1;
+
+                if (count >= mx2)
+                {
+                    mx2 = count;
+                    mx1 = arr[i];
+                }
             }
-            healthCost++;
+
+            res = mx1;
+            res += ((ll)(mx2 - 1)) * ((ll)k) + 1;
         }
         cout << res;
         newline;
-
     }
 };
 int main()

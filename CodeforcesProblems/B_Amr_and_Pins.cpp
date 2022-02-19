@@ -173,39 +173,25 @@ bool vComp(pair<int, int> a, pair<int, int> b)
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    ll r, x, y, xb, yb;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
-        {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
-            {
-                res = "YES";
-                break;
-            }
-            healthCost++;
-        }
-        cout << res;
+        cin >> r >> x >> y >> xb >> yb;
+        cout << steps();
         newline;
-
+    }
+    ll steps()
+    {
+        ld distance = (yb - y) * (yb - y) + (xb - x) * (xb - x);
+        distance = sqrt(distance) / r;
+        if ((int)distance != distance || ((int)distance) % 2 != 0)
+            distance += 2;
+        return ((int)(distance/2));
     }
 };
 int main()
 {
     FASTIO;
-    tests(t)
-    {
-        solution sol;
-    }
+    solution sol;
     return 0;
 }

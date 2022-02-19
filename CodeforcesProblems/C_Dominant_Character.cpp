@@ -173,31 +173,38 @@ bool vComp(pair<int, int> a, pair<int, int> b)
 
 struct solution
 {
-    ll hc, dc, hm, dm;
-    ll k, w, a;
-    string res="NO";
+    int n;
+    string s;
     solution()
     {
-        cin >> hc >> dc >> hm >> dm;
-        cin >> k >> w >> a;
-        ll healthCost = 0;
-        while (healthCost <= k)
+        int res = INT_MAX;
+        cin >> n >> s;
+        loop(i, 0, n - 1, 1)
         {
-            ll characterHealth = hc + healthCost*a;
-            ll characterAttack = dc + (k - healthCost)*w;
-
-            ll attAv = ((characterHealth - 1) / dm) + 1;
-            ll attReq = ceil(hm/(double)characterAttack);
-            if (attAv >= attReq)
+            if (s[i] == 'a')
             {
-                res = "YES";
-                break;
+                if (i + 1 < n && s[i + 1] == 'a')
+                    res = min(res, 2);
+                if (i + 2 < n && s[i + 2] == 'a')
+                    res = min(res, 3);
+                if (i + 3 < n && s[i + 3] == 'a')
+                {
+                    if ((s[i + 1] == 'b' && s[i + 2] == 'c') || (s[i + 1] == 'c' && s[i + 2] == 'b'))
+                        res = min(4, res);
+                }
+                if (i + 6 < n && s[i + 6] == 'a' && s[i + 3] == 'a')
+                {
+                    if (s[i + 1] == 'b' && s[i + 2] == 'b' && s[i + 4] == 'c' && s[i + 5] == 'c')
+                        res = min(res, 7);
+                    else if (s[i + 1] == 'c' && s[i + 2] == 'c' && s[i + 4] == 'b' && s[i + 5] == 'b')
+                        res = min(res, 7);
+                }
             }
-            healthCost++;
         }
+        if(res == INT_MAX)
+            res = -1;
         cout << res;
         newline;
-
     }
 };
 int main()
