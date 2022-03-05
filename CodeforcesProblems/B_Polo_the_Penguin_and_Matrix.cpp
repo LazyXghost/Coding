@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 // typedef gives datatype a newname
@@ -6,15 +6,15 @@ typedef long long ll;
 typedef long double ld;
 
 // define gives things an alias
-#define p(a,b) pair<a,b>
-#define pii pair<int,int>
+#define p(a, b) pair<a, b>
+#define pii pair<int, int>
 
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
 #define vvi vector<vector<int>>
-#define vpii vector<pair<int,int>>
-#define vvpii vector<vector<pair<int,int>>>
+#define vpii vector<pair<int, int>>
+#define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
 // vector<int> v({SIZE OF VECTOR}, {FILLING VALUE})
 
@@ -31,9 +31,9 @@ typedef long double ld;
 #define s(a) set<a>
 #define ms(a) multiset<a>
 #define us(a) unordered_set<a>
-#define m(a,b) map<a,b>
-#define mm(a,b) multimap<a,b>
-#define um(a,b) unordered_map<a,b>
+#define m(a, b) map<a, b>
+#define mm(a, b) multimap<a, b>
+#define um(a, b) unordered_map<a, b>
 
 #define FASTIO ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 
@@ -43,26 +43,42 @@ typedef long double ld;
 // fill(arr, arr+n, {FILLING VALUE})
 // fill(v.begin(),v.end(),{FILLING VALUE})
 
-#define removeScientific cout<<fixed;
-#define precision(a) cout<<setprecision(a);
+#define removeScientific cout << fixed;
+#define precision(a) cout << setprecision(a);
 
-#define tests(t) int t; cin >> t; while(t--)
-#define loop(i, a, b, inc) for (int i = a; i <= b; i+=inc)
-#define iteratorloop(v, i) for(auto i = v.begin();i!=v.end();i++)
+#define tests(t) \
+    int t;       \
+    cin >> t;    \
+    while (t--)
+#define loop(i, a, b, inc) for (int i = a; i <= b; i += inc)
+#define iteratorloop(v, i) for (auto i = v.begin(); i != v.end(); i++)
 #define val(x) (*(x))
 
-#define printArray(arr, n, i) for(int i = 0;i<n;i++){cout<<arr[i];space;}newline;
-#define printVector(v, i) for(auto i = v.begin();i!=v.end();i++){cout<<val(i);space;}newline;
-#define space cout<<" ";
-#define newline cout<< "\n";
+#define printArray(arr, n, i)   \
+    for (int i = 0; i < n; i++) \
+    {                           \
+        cout << arr[i];         \
+        space;                  \
+    }                           \
+    newline;
+#define printVector(v, i)                       \
+    for (auto i = v.begin(); i != v.end(); i++) \
+    {                                           \
+        cout << val(i);                         \
+        space;                                  \
+    }                                           \
+    newline;
+#define space cout << " ";
+#define newline cout << "\n";
 
 const ll MOD = 1e9 + 7;
 const ll INF = 1e15;
+const ld pi = 3.14159265358979323846;
 
 class sorting
 {
-string func = "";
-int order = 1;
+    string func = "";
+    int order = 1;
 
 public:
     sorting(string a = "", int b = 1)
@@ -73,21 +89,21 @@ public:
     void singleSort(vector<int> &first)
     {
         sort(first.begin(), first.end(), [&](int A, int B) -> bool
-        {
+             {
             bool res;
             if(order == -1)
                 res = A>B;
             else
                 res = A<B;
-            return res; 
-        });
+            return res; });
     }
-    void sortOnBasis(vector<int> & first, vector<int> & second)
+    void sortOnBasis(vector<int> &first, vector<int> &second)
     {
         int n = first.size();
         vector<int> indices(n), firstsorted(n), secondsorted(n);
         iota(indices.begin(), indices.end(), 0);
-        sort(indices.begin(), indices.end(), [&](int A, int B) -> bool{
+        sort(indices.begin(), indices.end(), [&](int A, int B) -> bool
+             {
             bool res;
             if (func == ""){
                 if(order == 1)
@@ -119,9 +135,9 @@ public:
                     // res = abs(second[A]-first[A]) < abs(second[B]-first[B]);
                 }
             }
-            return res;
-        });
-        for(int i = 0;i<n;i++){
+            return res; });
+        for (int i = 0; i < n; i++)
+        {
             firstsorted[i] = first[indices[i]];
             secondsorted[i] = second[indices[i]];
         }
@@ -129,9 +145,10 @@ public:
         second = secondsorted;
     }
 };
-struct hash_pair {
+struct hash_pair
+{
     template <class T1, class T2>
-    size_t operator()(const pair<T1, T2>& p) const
+    size_t operator()(const pair<T1, T2> &p) const
     {
         auto hash1 = hash<T1>{}(p.first);
         auto hash2 = hash<T2>{}(p.second);
@@ -139,13 +156,14 @@ struct hash_pair {
         // unordered_map<pair<int,int>,int,HASH>mp;
     }
 };
-struct pqComp {
+struct pqComp
+{
     constexpr bool operator()(
-        pair<int, int> const& a,
-        pair<int, int> const& b)
+        pair<int, int> const &a,
+        pair<int, int> const &b)
         const noexcept
     {
-        return a.second < b.second; //max heap
+        return a.second < b.second; // max heap
         // return a.second > b.second; //min heap
     }
 };
@@ -154,46 +172,60 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
-ll power(ll x,ll y){
+ll power(ll x, ll y)
+{
     ll res = 1;
-    while(y>0){
-        if(y&1)
-            res=(res*x);
-            // res=(res*x)%MOD;
-        y = y>>1;
-        x = x*x;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
         // x = (x*x)%MOD;
     }
     return res;
 }
 
-struct solution{
-    int n;
-    vi Numbers;
-    solution(){
-        cin>>n;
-        while(n>0){
-            int m = fqbn(n);
-            Numbers.push_back(m);
-            n = n-m;
+struct solution
+{
+    int n, m, d;
+    v(int) arr;
+    solution()
+    {
+        cin >> n >> m >> d;
+        loop(i, 0, n - 1, 1)
+            loop(j, 0, m - 1, 1)
+        {
+            int x;
+            cin >> x;
+            arr.push_back(x);
         }
-        cout<<Numbers.size();
-        newline;
-        sort(Numbers.begin(), Numbers.end());
-        printVector(Numbers, i);
-    }
-    int fqbn(int n){
-        int curr = 1;
-        int res = 0;
-        while(n>0){
-            if(n%10 > 0)
-                res += pow(10,curr-1);
-            n = n/10;
-            curr++;
-        }
-        return res;
-    }
+        sort(arr.begin(), arr.end());
 
+        ll res = 0;
+        loop(i, 0, n * m - 1, 1)
+        {
+            int x = abs(arr[i] - arr[n * m - 1]);
+            if (x % d != 0)
+            {
+                res = -1;
+                break;
+            }
+        }
+
+        if (res != -1)
+        {
+            int value = arr[(n * m + 1) / 2 - 1];
+            loop(i, 0, n * m - 1, 1)
+            {
+                int x = abs(arr[i] - value);
+                res += x / d;
+            }
+        }
+        cout << res;
+        newline;
+    }
 };
 int main()
 {

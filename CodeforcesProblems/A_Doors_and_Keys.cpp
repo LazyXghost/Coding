@@ -168,36 +168,45 @@ ll power(ll x,ll y){
 }
 
 struct solution{
-    int n;
-    vi Numbers;
     solution(){
-        cin>>n;
-        while(n>0){
-            int m = fqbn(n);
-            Numbers.push_back(m);
-            n = n-m;
+        string s;
+        cin>>s;
+        bool r = false;
+        bool g = false;
+        bool b = false;
+        string res="YES";
+        loop(i,0,5,1){
+            if(s[i]=='R' && r == false){
+                res = "NO";
+                break;
+            }
+            if(s[i]=='G' && g == false){
+                res = "NO";
+                break;
+            }
+            if(s[i]=='B' && b == false){
+                res = "NO";
+                break;
+            }
+            if(s[i]=='r'){
+                r = true;
+            }
+            if(s[i]=='g'){
+                g = true;
+            }
+            if(s[i]=='b'){
+                b = true;
+            }
         }
-        cout<<Numbers.size();
+        cout<<res;
         newline;
-        sort(Numbers.begin(), Numbers.end());
-        printVector(Numbers, i);
     }
-    int fqbn(int n){
-        int curr = 1;
-        int res = 0;
-        while(n>0){
-            if(n%10 > 0)
-                res += pow(10,curr-1);
-            n = n/10;
-            curr++;
-        }
-        return res;
-    }
-
 };
 int main()
 {
     FASTIO;
-    solution sol;
+    tests(t){
+        solution sol;
+    }
     return 0;
 }

@@ -12,14 +12,17 @@ typedef long double ld;
 #define v(a) vector<a>
 #define vv(a) vector<vector<a>>
 #define vi vector<int>
+#define vvi vector<vector<int>>
 #define vpii vector<pair<int, int>>
 #define vvpii vector<vector<pair<int, int>>>
 // vector<int> v({SIZE OF VECTOR})
 // vector<int> v({SIZE OF VECTOR}, {FILLING VALUE})
 
-#define pqfirst(a) priority_queue<a>
-#define pqsecond(a) priority_queue < a, vector<a>, greater<a>
-// priority_queue<int>
+#define pqmax(a) priority_queue<a>
+#define pqmin(a) priority_queue<a, vector<a>, greater<a>>
+#define pqcustom(a) priority_queue<a, vector<a>, pqComp>
+// by default priority queue is made max heap, to use min heap use greater or make custom comparator
+// priority_queue<int> - creates max heap
 // priority_queue<pair<int,int>> - ORDERING BY FIRST ELEMENT(if first elements are same then ordering by second elements)
 // priority_queue<pair<int,int>,vector<pair<int,int>>,{COMPARATOR}>
 
@@ -70,6 +73,7 @@ typedef long double ld;
 
 const ll MOD = 1e9 + 7;
 const ll INF = 1e15;
+const ld pi = 3.14159265358979323846;
 
 class sorting
 {
@@ -159,7 +163,8 @@ struct pqComp
         pair<int, int> const &b)
         const noexcept
     {
-        return a.second < b.second;
+        return a.second < b.second; // max heap
+        // return a.second > b.second; //min heap
     }
 };
 bool vComp(pair<int, int> a, pair<int, int> b)
@@ -167,35 +172,122 @@ bool vComp(pair<int, int> a, pair<int, int> b)
     return a.first < b.first; // increasing order
     // return a.first > b.first; // decreasing order
 }
+ll power(ll x, ll y)
+{
+    ll res = 1;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x);
+        // res=(res*x)%MOD;
+        y = y >> 1;
+        x = x * x;
+        // x = (x*x)%MOD;
+    }
+    return res;
+}
+
+class dsu
+{
+    um(int, int) parent, size;
+
+public:
+    // making new set by just initialising the parent of set as the same number
+    void make_set(int v)
+    {
+        parent[v] = v;
+        size[v] = 1;
+    }
+
+    // finding the root of the set
+    int find_set(int v)
+    {
+        if (v == parent[v])
+            return v;
+        // return find_set(parent[v]);
+
+        return parent[v] = find_set(parent[v]);
+        // 1st optimisization - path compression
+        // directly connects all the linear chain nodes to parent
+        // 7->5->3->1 ==> 7->1,5->1,3->1
+    }
+
+    // making the root of one set as the parent of root of other set will combine two sets
+    void union_set(int a, int b)
+    {
+        a = find_set(a);
+        b = find_set(b);
+        if (a != b)
+        {
+            // 2nd optimisation - union by size
+            if (size[a] < size[b])
+                swap(a, b);
+
+            parent[b] = a;
+            size[a] += size[b];
+        }
+    }
+
+    // returning the size of the set of vertex v
+    int find_size(int v)
+    {
+        return size[find_set(v)];
+    }
+};
+/*
+Time complexity -
+                            AFTER OPTIMISATION'S
+    FIND SET  - O(n)      O(alpha(n)) - almost constant
+    MAKE SET  - O(1)              O(1)
+    UNION SET - O(n)           O(alpha(n))
+*/
 
 struct solution
 {
-    int n;
-    v(ll) arr;
+    int n, m;
+    vvi details;
+    dsu res;
     solution()
     {
-        cin >> n;
+        int count = 0;
+        cin >> n >> m;
+        details.resize(m + 1);
         loop(i, 0, n - 1, 1)
         {
-            ll x;
-            cin >> x;
-            arr.push_back(x);
+            int k;
+            cin >> k;
+            if (k == 0)
+            {
+                count++;
+            }
+            res.make_set(i + 1);
+            loop(j, 0, k - 1, 1)
+            {
+                int x;
+                cin >> x;
+                details[x].push_back(i + 1);
+            }
         }
-        sort(arr.begin(), arr.end());
-
-        ll res = -arr[n - 1];
-        loop(k, 2, n, 1)
-            res += (2 * k - n - 1) * arr[k - 1];
-        cout << -res;
+        loop(i, 1, m, 1)
+        {
+            vi un = details[i];
+            int size = un.size();
+            loop(j, 1, size - 1, 1)
+                res.union_set(un[j], un[j - 1]);
+        }
+        us(int) fres;
+        loop(i, 1, n, 1)
+            fres.insert(res.find_set(i));
+        if (count == n)
+            cout << n;
+        else
+            cout << fres.size() - 1;
         newline;
     }
 };
 int main()
 {
     FASTIO;
-    tests(t)
-    {
-        solution sol;
-    }
+    solution sol;
     return 0;
 }

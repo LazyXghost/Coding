@@ -169,35 +169,32 @@ ll power(ll x,ll y){
 
 struct solution{
     int n;
-    vi Numbers;
     solution(){
         cin>>n;
-        while(n>0){
-            int m = fqbn(n);
-            Numbers.push_back(m);
-            n = n-m;
+        if(n == 3){
+            cout<<"3 2 1\n1 3 2\n3 1 2\n";
         }
-        cout<<Numbers.size();
-        newline;
-        sort(Numbers.begin(), Numbers.end());
-        printVector(Numbers, i);
-    }
-    int fqbn(int n){
-        int curr = 1;
-        int res = 0;
-        while(n>0){
-            if(n%10 > 0)
-                res += pow(10,curr-1);
-            n = n/10;
-            curr++;
-        }
-        return res;
-    }
+        else{
 
+        vi numbers;
+        loop(i,0,n-1,1){
+            numbers.push_back(n-i);
+        }
+        loop(i,0,n-1,1){
+            loop(j,0,n-1,1){
+                cout<<numbers[(i+j)%n];
+                space;
+            }
+            newline;
+        }
+        }
+    }
 };
 int main()
 {
     FASTIO;
-    solution sol;
+    tests(t){
+        solution sol;
+    }
     return 0;
 }

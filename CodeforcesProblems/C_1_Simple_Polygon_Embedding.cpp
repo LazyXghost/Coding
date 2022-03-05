@@ -58,6 +58,7 @@ typedef long double ld;
 
 const ll MOD = 1e9 + 7;
 const ll INF = 1e15;
+const ld pi = 3.14159265358979323846;
 
 class sorting
 {
@@ -169,35 +170,18 @@ ll power(ll x,ll y){
 
 struct solution{
     int n;
-    vi Numbers;
+    v(int) arr;
     solution(){
         cin>>n;
-        while(n>0){
-            int m = fqbn(n);
-            Numbers.push_back(m);
-            n = n-m;
-        }
-        cout<<Numbers.size();
-        newline;
-        sort(Numbers.begin(), Numbers.end());
-        printVector(Numbers, i);
+        cout<<fixed<<setprecision(10);
+        cout << 1 / tan(pi / (2 * n)) << "\n";
     }
-    int fqbn(int n){
-        int curr = 1;
-        int res = 0;
-        while(n>0){
-            if(n%10 > 0)
-                res += pow(10,curr-1);
-            n = n/10;
-            curr++;
-        }
-        return res;
-    }
-
 };
 int main()
 {
     FASTIO;
-    solution sol;
+    tests(t){
+        solution sol;
+    }
     return 0;
 }
