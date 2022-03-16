@@ -190,7 +190,7 @@ ll power(ll x, ll y)
 struct solution
 {
     int n;
-    um(ll, p(ll,ll)) arr;
+    v(int) arr;
     solution()
     {
         cin >> n;
@@ -198,23 +198,32 @@ struct solution
         {
             int x;
             cin >> x;
-            arr[x - i - 1].first += 1;
-            arr[x - i - 1].second += i + 1;
+            arr.push_back(x);
         }
-        ll res = 0;
-        iteratorloop(arr, i)
+        int res = 0;
+        int s = -1, e = -1;
+        loop(i, 1, n - 1, 1)
         {
-            ll tmp1 = val(i).first;
-            p(ll,ll) tmp2 = val(i).second;
-            res = max(res, tmp1*tmp2.first + tmp2.second);
+            if (arr[i] == 0)
+            {
+                if (s == -1)
+                    s = i;
+                e = i;
+            }
         }
-        cout<<res;
+        if (s == -1)
+            cout << 0;
+        else
+            cout << e - s + 2;
         newline;
     }
 };
 int main()
 {
     FASTIO;
-    solution sol;
+    tests(t)
+    {
+        solution sol;
+    }
     return 0;
 }

@@ -189,26 +189,76 @@ ll power(ll x, ll y)
 
 struct solution
 {
-    int n;
-    um(ll, p(ll,ll)) arr;
+    int n, m;
+    v(vi) arr;
     solution()
     {
-        cin >> n;
-        loop(i, 0, n - 1, 1)
+        cin >> n >> m;
+        loop(i, 1, n, 1)
         {
-            int x;
-            cin >> x;
-            arr[x - i - 1].first += 1;
-            arr[x - i - 1].second += i + 1;
+            vi row;
+            loop(j, 1, m, 1)
+            {
+                int x;
+                cin >> x;
+                row.push_back(x);
+            }
+            arr.push_back(row);
         }
+
         ll res = 0;
-        iteratorloop(arr, i)
+
+        um(int, vi) y;
+        loop(j, 0, m - 1, 1)
+            loop(i, 0, n - 1, 1)
+                y[arr[i][j]]
+                    .push_back(j);
+
+        iteratorloop(y, i)
         {
-            ll tmp1 = val(i).first;
-            p(ll,ll) tmp2 = val(i).second;
-            res = max(res, tmp1*tmp2.first + tmp2.second);
+            vi sumarr, simarr;
+            ll sum = 0;
+            printVector(val(i).second, j);
+            iteratorloop(val(i).second, j)
+            {
+                int tmp = val(j);
+                sum += tmp;
+                simarr.push_back(tmp);
+                sumarr.push_back(sum);
+            }
+            int size = val(i).second.size();
+            loop(j, 1, size - 1, 1)
+            {
+                res += simarr[j] * (ll)j - sumarr[j-1];
+            }
         }
-        cout<<res;
+
+        um(int, vi) x;
+        loop(i, 0, n - 1, 1)
+            loop(j, 0, m - 1, 1)
+                x[arr[i][j]]
+                    .push_back(i);
+
+        iteratorloop(x, i)
+        {
+            vi sumarr, simarr;
+            ll sum = 0;
+            printVector(val(i).second, j);
+            iteratorloop(val(i).second, j)
+            {
+                int tmp = val(j);
+                sum += tmp;
+                simarr.push_back(tmp);
+                sumarr.push_back(sum);
+            }
+            int size = val(i).second.size();
+            loop(j, 1, size - 1, 1)
+            {
+                res += simarr[j] * (ll)j - sumarr[j-1];
+            }
+        }
+
+        cout << res;
         newline;
     }
 };

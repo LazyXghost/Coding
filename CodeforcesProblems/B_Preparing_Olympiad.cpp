@@ -189,27 +189,42 @@ ll power(ll x, ll y)
 
 struct solution
 {
-    int n;
-    um(ll, p(ll,ll)) arr;
+    int n, l, r, x;
+    v(int) arr;
+    int res = 0;
     solution()
     {
-        cin >> n;
+        cin >> n >> l >> r >> x;
         loop(i, 0, n - 1, 1)
         {
-            int x;
-            cin >> x;
-            arr[x - i - 1].first += 1;
-            arr[x - i - 1].second += i + 1;
+            int tmp;
+            cin >> tmp;
+            arr.push_back(tmp);
         }
-        ll res = 0;
-        iteratorloop(arr, i)
-        {
-            ll tmp1 = val(i).first;
-            p(ll,ll) tmp2 = val(i).second;
-            res = max(res, tmp1*tmp2.first + tmp2.second);
-        }
-        cout<<res;
+        sort(arr.begin(), arr.end());
+        findAnswer();
+        cout << res;
         newline;
+    }
+    void findAnswer(int sum = 0, int i = 0, int mn = INT_MAX, int mx = INT_MIN)
+    {
+        if (i >= n)
+            return;
+        findAnswer(sum, i + 1, mn, mx);
+
+        ll gap = mx;
+        gap -= mn;
+
+        if (sum > r)
+            return;
+        else if (sum >= l && gap >= x)
+        {
+            cout << "Adding res for sum=" << sum << " and i =" << i;
+            newline;
+            res++;
+        }
+
+        findAnswer(sum + arr[i], i + 1, min(mn, arr[i]), max(mx, arr[i]));
     }
 };
 int main()
