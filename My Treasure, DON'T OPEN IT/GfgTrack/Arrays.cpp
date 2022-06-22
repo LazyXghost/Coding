@@ -1,16 +1,4 @@
 #include<bits/stdc++.h>
-#define pii pair<int, int>
-#define fori(s,n) for(int i=s;i<n;i++)
-#define forvi(v) for(auto i = v.begin(); i != v.end(); i++)
-#define val(x) (*x)
-#define ll long long
-#define umii unordered_map<int,int>
-#define usi unordered_set<int>
-#define takeinputarray(arr,n) fori(0,n){cin>>arr[i];}
-#define printarray(arr,n) fori(0,n){cout<<arr[i]<<' ';}cout<<endl;
-#define takeinputvector(v,n) fori(0,n){int x;cin>>x;v.push_back(x);}
-#define printvector(v) forvi(v){cout<<val(i)<' ';}
-
 using namespace std;
 
 void leftRotateByDPlaces(int arr[], int n, int d)
@@ -24,7 +12,7 @@ int trappingRainWater(int arr[], int n)
     int lmax[n], rmax[n], res = 0;
     lmax[0] = arr[0];
     rmax[n - 1] = arr[n - 1];
-    fori(1, n)
+    for(int i = 1;i<n;i++)
     {
         lmax[i] = max(arr[i], lmax[i - 1]);
     }
@@ -32,7 +20,7 @@ int trappingRainWater(int arr[], int n)
     {
         rmax[i] = max(arr[i], rmax[i + 1]);
     }
-    fori(0, n)
+    for(int i = 0;i<n;i++)
     {
         res += min(lmax[i], rmax[i]) - arr[i];
     }
@@ -42,7 +30,7 @@ int trappingRainWater(int arr[], int n)
 // {Kadane's algorithm
 int maxSubarraySum(int arr[],int n){
     int temp = arr[0],res = arr[0];
-    fori(1,n){
+    for(int i = 1;i<n;i++){
         temp = max(arr[i],temp);
         res = max(res,temp);
     }
@@ -55,7 +43,7 @@ int maxCircularSubarraySum(int arr[], int n)
         return res;
     }
     int sum = 0;
-    fori(0, n)
+    for(int i = 0;i<n;i++)
     {
         sum += arr[i];
         arr[i] = -arr[i];
@@ -67,7 +55,7 @@ int maxCircularSubarraySum(int arr[], int n)
 
 int majorityElement(int arr[],int n){
     int count = 1, res = 0;
-    fori(1, n)
+    for(int i = 1;i<n;i++)
     {
         if (arr[i] != arr[res])
             count--;
@@ -80,7 +68,7 @@ int majorityElement(int arr[],int n){
         }
     }
     count = 0;
-    fori(0, n) if (arr[i] == arr[res])
+    for(int i = 0;i<n;i++) if (arr[i] == arr[res])
         count++;
     if (count < n / 2)
         res = -1;
