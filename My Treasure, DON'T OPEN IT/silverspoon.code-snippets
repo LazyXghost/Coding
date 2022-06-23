@@ -215,7 +215,7 @@
 			"",
 			"class dsu",
 			"{",
-			"    um(int, int) parent, size;",
+			"    map<int,int> parent, size;",
 			"",
 			"public:",
 			"    // making new set by just initialising the parent of set as the same number",
