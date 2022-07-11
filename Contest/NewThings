@@ -1,6 +1,88 @@
 We can subtract iterators of vectors but not of set
 
+#include<bits/stdc++.h>
+using namespace std;
+
 sort(arr, arr + N, less<int>()); // increasing order sort
 sort(arr, arr + N, greater<int>()); // decreasing order sort
 // less_equal<int>()
 // greater_equal<int>()
+
+struct SegmentTree
+{
+    int leafNodes;
+    int stSize;
+    int leafStartingInd;
+    int levels;
+    vector<pair<map<int,int>, pair<int,int>>> tree;
+    void buildTree()
+    {
+        int x = levels - 1;
+        while (x > 0)
+        {
+            int n = pow(2, x - 1);
+            int sti = n;
+            for (int i = 0; i < n; i++)
+            {
+                int ind = sti + i;
+                for(auto v: tree[ind*2].first)
+                    tree[ind].first[v.first]+=v.second;
+                for(auto v: tree[ind*2 + 1].first)
+                    tree[ind].first[v.first]+=v.second;
+                tree[ind].second = {tree[ind*2].second.first, tree[ind*2+1].second.second};
+            }
+            x--;
+        }
+    }
+    void update(int ind, int x)
+    {
+        int i = leafStartingInd + ind;
+        int value = tree[i].first.begin()->first;
+        int newValue = x;
+        while (i != 0)
+        {
+            tree[i].first[value]--;
+            if(tree[i].first[value] == 0)
+                tree[i].first.erase(value);
+            tree[i].first[newValue]++;
+            i = i / 2;
+        }
+    }
+    int getRangeCount(int level, int l, int r)
+    {
+        if(r < l)
+            return 0;
+
+        pair<int,int> range = tree[level].second;
+        if(range.first == l && range.second == r){
+            int count = 0;
+            for(auto v:tree[level].first){
+                if(v.second%2 == 1)
+                    count++;
+            }
+            return count;
+        }
+        return getRangeCount(level*2, l, tree[level*2].second.second) + getRangeCount(level*2 + 1, tree[level*2 + 1].second.first, r);
+    }
+    SegmentTree(vector<long long> &A)
+    {
+        int x = A.size();
+        if (x == 1)
+            levels = 1;
+        else
+            levels = log2(x - 1) + 2;
+
+        leafNodes = pow(2, levels - 1);
+        stSize = 2 * leafNodes;
+        leafStartingInd = leafNodes;
+
+        map<int,int> mp;
+        tree.resize(stSize, {mp,{-1,-1}});
+        for (int i = 0; i < x; i++){
+            tree[leafStartingInd + i].first[A[i]]++;
+            tree[leafStartingInd + i].second = {i,i};
+        }
+
+        buildTree();
+    }
+};
