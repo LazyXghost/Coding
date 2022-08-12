@@ -32,10 +32,62 @@ template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i
 template <class T, class V> void _print(unordered_map <T, V> v) {cerr << "[ "; for (auto i : v) {cerr<< "(";_print(i.first); cerr << "--> "; _print(i.second);cerr<< "),";} cerr << "]";}
 
 struct solution{
-    int n;
+    ll n = 26;
+    vector<ll> vis;
+    vector<vector<ll>> graph;
+    stack<int> topoSort;
+
+    bool checkIfAnswerExists(){
+    }
+
+    bool addEdge(string a, string b){
+        int i = 0;
+        while(i<a.size() && i < b.size())
+            if(a[i] == b[i])
+                i++;
+            else
+                break;
+        if(i < a.size() && i < b.size()){
+            int first = a[i]-'a'+1, second = b[i]-'a'+1;
+            graph[first].push_back(second);
+        }
+        return true;
+    }
+    void dfs(int u){
+        for(auto v: graph[u]){
+            if(!vis[v]){
+                vis[v] = 1;
+                dfs(v);
+            }
+        }
+        topoSort.push(u);
+    }
     solution(){
-        cin>>n;
-        
+        int x;
+        cin>>x;
+        string last, curr;
+        cin>>last;
+        vis.resize(27, 0);
+        graph.resize(27);
+
+        if(checkIfAnswerExists())
+        {
+            for(int i = 26;i>0;i--){
+                if(!vis[i]){
+                    vis[i] = 1;
+                    dfs(i);
+                }
+            }
+            string res = "";
+            while(topoSort.size()){
+                res += char(topoSort.top() + 'a' - 1);
+                topoSort.pop();
+            }
+            cout<<res;
+        }
+        else
+            cout<<"Impossible";
+        newline;
     }
 };
 int main()
