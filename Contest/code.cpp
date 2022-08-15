@@ -1,14 +1,8 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-typedef long long ll;
-typedef long double ld;
-
 #define FASTIO ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
-#define tests(t) ll t; cin >> t; while(t--)
 #define val(x) (*(x))
-#define space cout<<" ";
-#define newline cout<< "\n";
 
 #ifndef ONLINE_JUDGE
 #define debug(x) cerr << #x <<" "; _print(x); cerr << endl;
@@ -16,7 +10,7 @@ typedef long double ld;
 #define debug(x)
 #endif
 
-void _print(ll t) {cerr << t;}
+void _print(long long t) {cerr << t;}
 void _print(int t) {cerr << t;}
 void _print(string t) {cerr << t;}
 void _print(char t) {cerr << t;}
@@ -32,62 +26,59 @@ template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i
 template <class T, class V> void _print(unordered_map <T, V> v) {cerr << "[ "; for (auto i : v) {cerr<< "(";_print(i.first); cerr << "--> "; _print(i.second);cerr<< "),";} cerr << "]";}
 
 struct solution{
-    ll n = 26;
-    vector<ll> vis;
-    vector<vector<ll>> graph;
-    stack<int> topoSort;
-
-    bool checkIfAnswerExists(){
-    }
-
-    bool addEdge(string a, string b){
-        int i = 0;
-        while(i<a.size() && i < b.size())
-            if(a[i] == b[i])
-                i++;
-            else
-                break;
-        if(i < a.size() && i < b.size()){
-            int first = a[i]-'a'+1, second = b[i]-'a'+1;
-            graph[first].push_back(second);
+    long long n, k;
+    vector<long long> arr;
+    long long findResult(){
+        long long mn = 1e9;
+        for(int i = 0;i<n;i++)
+            mn = min(mn, arr[i]);
+        long long res = mn;
+        for(int i = 0;i<n-1;i++){
+            long long dis = min(arr[i], arr[i+1]);
+            dis = min(dis, mn*2);
+            res = max(res , dis);
         }
-        return true;
-    }
-    void dfs(int u){
-        for(auto v: graph[u]){
-            if(!vis[v]){
-                vis[v] = 1;
-                dfs(v);
-            }
-        }
-        topoSort.push(u);
+        return res;
     }
     solution(){
-        int x;
-        cin>>x;
-        string last, curr;
-        cin>>last;
-        vis.resize(27, 0);
-        graph.resize(27);
-
-        if(checkIfAnswerExists())
-        {
-            for(int i = 26;i>0;i--){
-                if(!vis[i]){
-                    vis[i] = 1;
-                    dfs(i);
-                }
-            }
-            string res = "";
-            while(topoSort.size()){
-                res += char(topoSort.top() + 'a' - 1);
-                topoSort.pop();
-            }
-            cout<<res;
+        cin>>n>>k;
+        for(int i = 0;i<n;i++){
+            long long x;
+            cin>>x;
+            arr.push_back(x);
         }
-        else
-            cout<<"Impossible";
-        newline;
+        if(n == 2){
+            if(k == 2)
+                cout<<1000000000<<endl;
+            else if(k == 1)
+                cout<<max(arr[0], arr[1])<<endl;
+            else
+                cout<<min(arr[0], arr[1])<<endl;
+        }
+        else{
+            vector<pair<long long, long long>> brr;
+            for(int i = 0;i<n;i++)
+                brr.push_back({arr[i], i});
+            sort(brr.begin(), brr.end());
+
+            if(k == 1){
+                arr[brr[0].second] = 1e9;
+                cout<<findResult()<<endl;
+            }
+            else{
+                for(int i = 0;i<k-1;i++)
+                    arr[brr[i].second] = 1e9;
+
+                long long lstind = ((brr[0].second == 0)? brr[0].second + 1: brr[0].second - 1);
+                long long temp = 1e9;
+                swap(arr[lstind], temp);
+                long long res = findResult();
+                swap(arr[lstind], temp);
+                arr[brr[k-1].second] = 1e9;
+                res = max(res, findResult());
+                cout<<res<<endl;
+            }
+        }
     }
 };
 int main()
@@ -98,7 +89,7 @@ int main()
     freopen("Debug.txt", "w", stderr);
     #endif
     FASTIO;
-    tests(t){
+    long long t; cin >> t; while(t--){
         solution sol;
     }
     return 0;

@@ -1,2 +1,6 @@
-bcdefghijklmnopqrsatuvwxyz
-IMPOSSIBLE
+4
+168
+10
+1000000000
+9
+1000000000
