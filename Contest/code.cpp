@@ -26,59 +26,34 @@ template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i
 template <class T, class V> void _print(unordered_map <T, V> v) {cerr << "[ "; for (auto i : v) {cerr<< "(";_print(i.first); cerr << "--> "; _print(i.second);cerr<< "),";} cerr << "]";}
 
 struct solution{
-    long long n, k;
+    long long n;
     vector<long long> arr;
-    long long findResult(){
-        long long mn = 1e9;
-        for(int i = 0;i<n;i++)
-            mn = min(mn, arr[i]);
-        long long res = mn;
-        for(int i = 0;i<n-1;i++){
-            long long dis = min(arr[i], arr[i+1]);
-            dis = min(dis, mn*2);
-            res = max(res , dis);
-        }
-        return res;
-    }
     solution(){
-        cin>>n>>k;
-        for(int i = 0;i<n;i++){
-            long long x;
-            cin>>x;
+        cin>>n;
+        string s;
+        cin>>s;
+        for(auto c: s){
+            long long x = (c - '0');
             arr.push_back(x);
         }
-        if(n == 2){
-            if(k == 2)
-                cout<<1000000000<<endl;
-            else if(k == 1)
-                cout<<max(arr[0], arr[1])<<endl;
-            else
-                cout<<min(arr[0], arr[1])<<endl;
+        for(int i = 1;i<n;i++){
+            arr[i] += arr[i-1];
         }
-        else{
-            vector<pair<long long, long long>> brr;
-            for(int i = 0;i<n;i++)
-                brr.push_back({arr[i], i});
-            sort(brr.begin(), brr.end());
-
-            if(k == 1){
-                arr[brr[0].second] = 1e9;
-                cout<<findResult()<<endl;
-            }
-            else{
-                for(int i = 0;i<k-1;i++)
-                    arr[brr[i].second] = 1e9;
-
-                long long lstind = ((brr[0].second == 0)? brr[0].second + 1: brr[0].second - 1);
-                long long temp = 1e9;
-                swap(arr[lstind], temp);
-                long long res = findResult();
-                swap(arr[lstind], temp);
-                arr[brr[k-1].second] = 1e9;
-                res = max(res, findResult());
-                cout<<res<<endl;
-            }
+        long long res = 0;
+        for(int i = 0;i<n;i++){
+            arr[i] -= (i+1);
+            if(arr[i] == 0)
+                res++;
         }
+        map<long long, long long> mp;
+        for(int i = 0;i<n;i++){
+            if(mp.find(arr[i])!=mp.end()){
+                res += mp[arr[i]];
+            }
+            mp[arr[i]]++;
+        }
+        cout<<res;
+        cout<<"\n";
     }
 };
 int main()
