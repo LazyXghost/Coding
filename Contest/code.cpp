@@ -25,35 +25,69 @@ template <class T> void _print(multiset <T> v) {cerr << "{ "; for (T i : v) {_pr
 template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i : v) {cerr<< "(";_print(i.first); cerr << "--> "; _print(i.second);cerr<< "),";} cerr << "]";}
 template <class T, class V> void _print(unordered_map <T, V> v) {cerr << "[ "; for (auto i : v) {cerr<< "(";_print(i.first); cerr << "--> "; _print(i.second);cerr<< "),";} cerr << "]";}
 
+const int MOD = 1e9 + 7;
+
 struct solution{
-    long long n;
-    vector<long long> arr;
+    // solution(){
+    //     long long n, k;
+    //     cin>>n>>k;
+    //     string s;
+    //     cin>>s;
+    //     vector<vector<int>> dpSmall(n, vector<int>(k+1)),dpEqual(n, vector<int>(k+1)),dpBig(n, vector<int>(k+1));
+    //     dpSmall[n-1][0] = s[n-1] - 'a';
+    //     dpEqual[n-1][0] = 1;
+    //     dpBig[n-1][1] = 26 - (s[n-1] - 'a');
+    //     for(int i = n-2;i>=0;i--){
+    //         for(int beauty = 0;beauty<=k;beauty++){
+    //             dpSmall[i][beauty] = (s[n-1] - 'a') * (dpSmall[i+1][beauty] + dpEqual[i+1][beauty] + dpBig[i+1][beauty]);
+    //             dpEqual[i][beauty] = 
+    //         }
+    //     }
+    // }
+    void changeValues(vector<int> &first, vector<int> &second, int orValue){
+        for(int i = 0;i<30;i++){
+            int orBit = (orValue & (1 << (29 - i)));
+            if(orBit && first[i] == 0)
+                second[i] = 1;
+        }
+    }
+    int findValue(vector<int> &arr){
+        int value = 0;
+        for(int i = 0;i<arr.size();i++){
+            value *= 2;
+            if(arr[i] == 1)
+                value++;
+        }
+        return value;
+    }
     solution(){
-        cin>>n;
-        string s;
-        cin>>s;
-        for(auto c: s){
-            long long x = (c - '0');
-            arr.push_back(x);
-        }
-        for(int i = 1;i<n;i++){
-            arr[i] += arr[i-1];
-        }
-        long long res = 0;
-        for(int i = 0;i<n;i++){
-            arr[i] -= (i+1);
-            if(arr[i] == 0)
-                res++;
-        }
-        map<long long, long long> mp;
-        for(int i = 0;i<n;i++){
-            if(mp.find(arr[i])!=mp.end()){
-                res += mp[arr[i]];
+        long long n, q;
+        cin>>n>>q;
+        vector<vector<int>> numbers(n+1, vector<int>(30, -1));
+        map<int, vector<pair<int,int>>> mp;
+        while(q--){
+            int first, second, orValue;
+            cin>>first>>second>>orValue;
+            if(first > second)
+                swap(first, second);
+            mp[first].push_back({second, orValue});
+            for(int i = 0;i<30;i++){
+                if((orValue & (1<<(29-i))) == 0){
+                    numbers[first][i] = 0;
+                    numbers[second][i] = 0;
+                }
             }
-            mp[arr[i]]++;
         }
-        cout<<res;
-        cout<<"\n";
+        for(int i = 1;i<n+1;i++){
+            for(int j = 0;j<30;j++)
+                if(numbers[i][j] == -1)
+                    numbers[i][j] = 0;
+            for(auto x: mp[i])
+                changeValues(numbers[i], numbers[x.first], x.second);
+        }
+        for(int i = 1;i<n+1;i++)
+            cout<<findValue(numbers[i])<<" ";
+        cout<<endl;
     }
 };
 int main()
@@ -64,8 +98,7 @@ int main()
     freopen("Debug.txt", "w", stderr);
     #endif
     FASTIO;
-    long long t; cin >> t; while(t--){
-        solution sol;
-    }
+    int t;cin>>t;while(t--)
+    solution sol;
     return 0;
 }

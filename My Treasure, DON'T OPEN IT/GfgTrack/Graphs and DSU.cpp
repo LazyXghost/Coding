@@ -1,297 +1,25 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-// typedef gives datatype a newname
-typedef long long ll;
-typedef long double ld;
-
-// define gives things an alias
-#define p(a, b) pair<a, b>
-#define pii pair<int, int>
-
-#define v(a) vector<a>
-#define vv(a) vector<vector<a>>
-#define vi vector<int>
-#define vpii vector<pair<int, int>>
-#define vvpii vector<vector<pair<int, int>>>
-// vector<int> v({SIZE OF VECTOR})
-// vector<int> v({SIZE OF VECTOR}, {FILLING VALUE})
-
-#define pq(a) priority_queue<a>
-#define pq(a, b) priority_queue<a, vector<a>, b>
-// priority_queue<int>
-// priority_queue<pair<int,int>> - ORDERING BY FIRST ELEMENT(if first elements are same then ordering by second elements)
-// priority_queue<pair<int,int>,vector<pair<int,int>>,{COMPARATOR}>
-
-#define q(a) queue<a>
-#define st(a) stack<a>
-#define s(a) set<a>
-#define ms(a) multiset<a>
-#define us(a) unordered_set<a>
-#define m(a, b) map<a, b>
-#define mm(a, b) multimap<a, b>
-#define um(a, b) unordered_map<a, b>
-
 #define FASTIO ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
-
-#define fill(start, end, val) fill(start, end, val)
-#define fill(start, end, val) fill(start, end, val)
-// fill funtion can be used to fill anything with a value
-// fill(arr, arr+n, {FILLING VALUE})
-// fill(v.begin(),v.end(),{FILLING VALUE})
-
-#define removeScientific cout << fixed;
-#define precision(a) cout << setprecision(a);
-
-#define tests(t) \
-    int t;       \
-    cin >> t;    \
-    while (t--)
-#define loop(i, a, b, inc) for (int i = a; i <= b; i += inc)
-#define iteratorloop(v, i) for (auto i = v.begin(); i != v.end(); i++)
 #define val(x) (*(x))
+const long long INF = INFINITY;
 
-#define printArray(arr, n, i)   \
-    for (int i = 0; i < n; i++) \
-    {                           \
-        cout << arr[i];         \
-        space;                  \
-    }                           \
-    newline;
-#define printVector(v, i)                       \
-    for (auto i = v.begin(); i != v.end(); i++) \
-    {                                           \
-        cout << val(i);                         \
-        space;                                  \
-    }                                           \
-    newline;
-#define space cout << " ";
-#define newline cout << "\n";
-
-const ll MOD = 1e9 + 7;
-const ll INF = 1e15;
-
-class sorting
-{
-    string func = "";
-    int order = 1;
-
-public:
-    sorting(string a = "", int b = 1)
-    {
-        func = a;
-        order = b;
-    }
-    void singleSort(vector<int> &first)
-    {
-        sort(first.begin(), first.end(), [&](int A, int B) -> bool
-             {
-            bool res;
-            if(order == -1)
-                res = A>B;
-            else
-                res = A<B;
-            return res; });
-    }
-    void sortOnBasis(vector<int> &first, vector<int> &second)
-    {
-        int n = first.size();
-        vector<int> indices(n), firstsorted(n), secondsorted(n);
-        iota(indices.begin(), indices.end(), 0);
-        sort(indices.begin(), indices.end(), [&](int A, int B) -> bool
-             {
-            bool res;
-            if (func == ""){
-                if(order == 1)
-                    res = second[A] < second[B];
-                else
-                    res = second[A] > second[B];
-            }
-            else{
-                if(func == "-"){
-                    if(order == 1)
-                        res = second[A]-first[A] < second[B]-first[B];
-                    else
-                        res = second[A]-first[A] > second[B]-first[B];
-                }
-                else if(func == "+"){
-                    if(order == 1)
-                        res = second[A]+first[A] < second[B]+first[B];
-                    else
-                        res = second[A]+first[A] > second[B]+first[B];
-                }
-                else{
-                    if(order == 1){
-                        
-                    }
-                    else{
-                        
-                    }
-                    // custom function
-                    // res = abs(second[A]-first[A]) < abs(second[B]-first[B]);
-                }
-            }
-            return res; });
-        for (int i = 0; i < n; i++)
-        {
-            firstsorted[i] = first[indices[i]];
-            secondsorted[i] = second[indices[i]];
-        }
-        first = firstsorted;
-        second = secondsorted;
-    }
-};
-struct hash_pair
-{
-    template <class T1, class T2>
-    size_t operator()(const pair<T1, T2> &p) const
-    {
-        auto hash1 = hash<T1>{}(p.first);
-        auto hash2 = hash<T2>{}(p.second);
-        return hash1 ^ hash2;
-        // unordered_map<pair<int,int>,int,HASH>mp;
-    }
-};
-struct pqComp
-{
-    constexpr bool operator()(
-        pair<int, int> const &a,
-        pair<int, int> const &b)
-        const noexcept
-    {
-        return a.second < b.second;
-    }
-};
-bool vComp(pair<int, int> a, pair<int, int> b)
-{
-    return a.first < b.first; // increasing order
-    // return a.first > b.first; // decreasing order
-}
-
-// ================================= BFS =============================================
-v(v(int)) graph;
-int n;
-v(int) vis(n + 1, 0), dep(n + 1, INF), par(n + 1, -1);
-void bfs(int s)
-{
-    queue<int> q;
-    q.push(s);
-    dep[s] = 0;
-    par[s] = -1;
-    vis[s] = 1;
-
-    while (!q.empty())
-    {
-        int u = q.front();
-        q.pop();
-        // don't mark visited here! (why? bug!)
-        iteratorloop(graph[u], i)
-        {
-            int v = val(i);
-            // if (dep[v]==INF)  // if we use depth than we don't need visited array
-            if (!vis[v])
-            {
-                q.push(v);
-                dep[v] = dep[u] + 1;
-                par[v] = u;
-                vis[v] = 1;
-            }
-        }
-    }
-}
 // to solve police thief problem we can run bfs from thieve and in case of
 // directed graph we can reverse edges
 
 // for multi source bfs push all the multisources in the queue and mark them all visited
 // this is same as having dummy source as parent of all the polices
 
-const int N = 1000, M = 1000;
-int dx[4] = {0, 1, 0, -1}, dy[4] = {1, 0, -1, 0};        // four neighbours
-int kx[5] = {-2, -1, 1, 2, 2}, ky[5] = {1, 2, 2, 1, -1}; // knight moves in case of chessboard
-int dist[N][M];
-bool checkIfNotOutsideGrid(int x, int y)
-{
-    return (x < N && x >= 0 && y < M && y >= 0);
-}
-void gridbfs(v(p(int, int)) & st)
-{
-    queue<p(int, int)> q;
-
-    // initialisition loop for multisource bfs by pushing them in single queue
-    iteratorloop(st, i)
-    {
-        p(int, int) source = val(i);
-        dist[source.first][source.second] = 0;
-        q.push(source);
-    }
-
-    // running simple bfs with additional logic according to question
-    while (!q.empty())
-    {
-        int x = q.front().first, y = q.front().second;
-        q.pop();
-        loop(i, 0, 3, 1)
-        { // instead of constructing graph use FOR loop for 4 edges
-            int tempx = x + dx[i], tempy = y + dy[i];
-            if (checkIfNotOutsideGrid(tempx, tempy) && dist[tempx][tempy] == INF)
-            {
-                dist[tempx][tempy] = dist[x][y] + 1;
-                q.push({tempx, tempy});
-            }
-        }
-    }
-}
-// ===================================================================================
-
-// ================================== DFS ============================================
-int n;
-v(int) vis(n + 1, 0), lev(n + 1, 0), par(n + 1, -1);
-v(v(int)) graph(n + 1);
-void dfs(int u)
-{
-    vis[u] = true;
-    // if(graph[u].size()==0){
-    //     height[u] = 0;
-    // }
-    iteratorloop(graph[u], i)
-    {
-        int v = val(i);
-        if (!vis[v])
-        {
-            lev[v] = lev[u] + 1;
-            par[v] = u;
-            dfs(v);
-            // height(v) = height[u]+1;
-        }
-    }
-}
-
-// -------------- NO OF COMPONENTS -------------------
-int NoOfComponents()
-{
-    int no_of_comp = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        if (!vis[i])
-        {
-            // whenever we find a node no visited by this loop then it will be new component
-            no_of_comp++;
-            dfs(i);
-        }
-    }
-    return no_of_comp;
-}
-// ---------------------------------------------------
-
 // ----------- TIMERS + TREE VERSION DFS -------------
 // this implementation is only for trees since we are not maintaining a visited array
 // and only checking the instantaneous parent
 int timer = 0;
-v(int) tin, tout;
+vector<int> tin, tout;
 void DFS(int u, int p = -1)
 {
     tin[u] = timer++;
-    iteratorloop(graph[u], i)
+    for(auto i = graph[u].begin();i!=graph[u].end();i++)
     {
         int v = val(i);
         if (v == p)
@@ -306,87 +34,24 @@ void DFS(int u, int p = -1)
     left bottom most node has min tout since its dfs completes first
     right bottom most node has max tin since its dfs is called last */
 // ----------------------------------------------------
-
-// ------------------- GRID DFS -----------------------
-struct gridDfs
-{
-    int n, m;
-    v(v(int)) grid;
-    v(int) dx = {0, 1, 0, -1}, dy = {1, 0, -1, 0};
-    queue<pair<int, int>> allSources;
-    v(v(bool)) vis;
-    gridDfs()
-    {
-        cin >> n >> m;
-        grid.resize(n);
-        loop(i, 0, n - 1, 1)
-        {
-            loop(j, 0, m - 1, 1)
-            {
-                int x;
-                cin >> x;
-                grid[i].push_back(x);
-            }
-        }
-        vis.resize(n, v(bool)(m, false));
-        dfs({n - 1, m - 1});
-
-        // push all the sources in allSources queue first
-        bool SourceConnectedToEnd = true;
-        while (!allSources.empty())
-        {
-            p(int, int) pos = allSources.front();
-            allSources.pop();
-            if (vis[pos.first][pos.second] == false)
-                SourceConnectedToEnd = false;
-        }
-        if (SourceConnectedToEnd)
-            cout << "Yes\n";
-        else
-            cout << "No\n";
-    }
-    void dfs(p(int, int) u)
-    {
-        int x = u.first, y = u.second;
-        vis[x][y] = true;
-        loop(pos, 0, 3, 1)
-        {
-            int tempx = x + dx[pos], tempy = y + dy[pos];
-            if (insideGrid(tempx, tempy) && vis[tempx][tempy] == false && allowed(tempx, tempy))
-                dfs({tempx, tempy});
-        }
-    }
-    bool allowed(int a, int b)
-    {
-        // logic to check if the grid checkbox is allowed
-        return true;
-    }
-    bool insideGrid(int a, int b)
-    {
-        return a >= 0 && a < n && b >= 0 && b < m;
-    }
-};
-// ----------------------------------------------------
-// ==================================================================================
-
 // ============================== LCA ===============================
 struct LCA
 {
     int n, LOG, timer = 0;
-    v(v(int)) graph, ancestor;
-    v(int) dep, tin, tout;
+    vector<vector<int>> graph, ancestor;
+    vector<int> dep, tin, tout;
     void init(int x)
     {
         n = x;
         timer = 0;
         LOG = ceil(log2(n));
         graph.resize(n + 1);
-        ancestor.resize(n + 1, v(int)(LOG + 1));
+        ancestor.resize(n + 1, vector<int>(LOG + 1));
         dep.assign(n + 1, 0);
         tin.assign(n + 1, 0);
         tout.assign(n + 1, 0);
 
-        loop(i, 1, n, 1)
+        for(int i = 1;i<=n;i++)
         {
             int x, y;
             cin >> x >> y;
@@ -394,38 +59,39 @@ struct LCA
             graph[y].push_back(x);
         }
         dfs(1);
-        pre(1, 1);
+        pre();
     }
     void dfs(int u, int p = -1)
     {
         tin[u] = timer++;
-        iteratorloop(graph[u], i)
+        for(auto i = graph[u].begin();i!=graph[u].end();i++)
         {
             int v = val(i);
             // in case of tree we don't need visited array
             if (v == p)
                 continue;
             dep[v] = dep[u] + 1;
+            ancestor[v][0] = u;
             dfs(v, u);
         }
         tout[u] = timer++;
     }
-    void pre(int a, int b)
+    void pre()
     {
-        ancestor[a][0] = b;
+        ancestor[1][0] = 1;
         // setting up the ancestor 2d vector for kth ancestor problems
-        loop(v, 1, n, 1)
+        for(int v = 1;v<=n;v++)
         {
             // running loop for the max bit ancestor like 2^5 -> 32
             // so running loop 5 times for LOG = 5
-            loop(bit, 1, LOG, 1)
+            for(int bit = 1;bit<=LOG;bit++)
             {
                 int u = ancestor[v][bit - 1];
                 // u is 2^(bit-1)
-                if (u == -1)
-                    ancestor[v][bit] = -1;
+                // if (u == -1)
+                    // ancestor[v][bit] = -1;
                 // if ancestor doesn't exist then marking it -1
-                else
+                // else
                     ancestor[v][bit] = ancestor[u][bit - 1];
                 // dividing 2^bit ancestor in 2^(bit-1) + 2^(bit-1)
             }
@@ -436,6 +102,7 @@ struct LCA
         // using timers to check if u is ancestor of v
         return tin[u] <= tin[v] && tout[u] >= tout[v];
     }
+
     int lca(int u, int v)
     {
         // check if u or v are LCA
@@ -478,9 +145,9 @@ struct LCA
 struct graphCenters
 {
     int n;
-    v(v(int)) graph;
-    v(bool) vis;
-    v(int) dep, par, centers;
+    vector<vector<int>> graph;
+    vector<bool> vis;
+    vector<int> dep, par, centers;
     int mxdep, mxdepv;
     graphCenters()
     {
@@ -490,7 +157,7 @@ struct graphCenters
         dep.resize(n + 1);
         par.resize(n + 1);
         int x, y;
-        loop(i, 1, n - 1, 1)
+        for(int i = 1;i<n;i++)
         {
             cin >> x >> y;
             graph[x].push_back(y);
@@ -536,7 +203,7 @@ struct graphCenters
     void dfs(int u)
     {
         vis[u] = true;
-        iteratorloop(graph[u], i)
+        for(auto i = graph[u].begin();i!=graph[u].end();i++)
         {
             int v = val(i);
             if (!vis[v])
@@ -552,9 +219,9 @@ struct graphCenters
 struct graphCentroids
 {
     int n;
-    v(v(int)) graph;
-    v(int) par, centroids, size;
-    v(p(int, int)) deletionsizes;
+    vector<vector<int>> graph;
+    vector<int> par, centroids, size;
+    vector<pair<int,int>> deletionsizes;
 
     graphCentroids()
     {
@@ -596,7 +263,7 @@ struct graphCentroids
                     it++;
                 sizechild = size[val(it)];
 
-                iteratorloop(graph[u], i)
+                for(auto i = graph[u].begin();i!=graph[u].end();i++)
                 {
                     int v = val(i);
                     if (v == par[u])
@@ -610,7 +277,7 @@ struct graphCentroids
         }
         loop(u, 1, n, 1)
         {
-            p(int, int) sz = deletionsizes[u];
+            pair<int,int> sz = deletionsizes[u];
             if (max(sz.first, sz.second) == res)
             {
                 centroids.push_back(u);
@@ -619,7 +286,7 @@ struct graphCentroids
     }
     void dfsWithSize(int u, int p)
     {
-        iteratorloop(graph[u], i)
+        for(auto i = graph[u].begin();i!=graph[u].end();i++)
         {
             int v = val(i);
             if (v == p)
@@ -634,34 +301,34 @@ struct graphCentroids
 
 // ==================================================================
 
-// ======================= TOPO SORT OF DAG =========================
-stack<int> topoStack;
-void topoSortCall()
-{
-    // reverse loop so that component having max value root gets first inside stack
-    // or last while printing
-    loop(i, n, 1, -1) if (vis[i] == false)
-        topoSort(i);
-}
-void topoSort(int u)
-{
-    vis[u] = true;
-    iteratorloop(graph[u], i)
-    {
-        int v = val(i);
-        if (vis[v] == false)
-            topoSort(v);
-    }
-    topoStack.push(u);
-}
-// ==================================================================
+// // ======================= TOPO SORT OF DAG =========================
+// stack<int> topoStack;
+// void topoSortCall()
+// {
+//     // reverse loop so that component having max value root gets first inside stack
+//     // or last while printing
+//     loop(i, n, 1, -1) if (vis[i] == false)
+//         topoSort(i);
+// }
+// void topoSort(int u)
+// {
+//     vis[u] = true;
+//     for(auto i = graph[u].begin();i!=graph[u].end();i++)
+//     {
+//         int v = val(i);
+//         if (vis[v] == false)
+//             topoSort(v);
+//     }
+//     topoStack.push(u);
+// }
+// // ==================================================================
 
 // ======================= SHORTEST PATH ============================
 struct shortestPath
 {
     int n, m, src;
-    vvpii graph;
-    vi dist, vis, par;
+    vector<vector<pair<int,int>>> graph;
+    vector<int> dist, vis, par;
     pq(pii, pqComp) priq;
 
     shortestPath()
@@ -738,9 +405,9 @@ struct shortestPath
     void bellmanFord(int src)
     {
         dist[src] = 0;
-        loop(i, 1, n - 1, 1)
+        for(int i = 1;i<n;i++)
         {
-            loop(curr_node, 1, n, 1)
+            for(int curr_node = 1;curr_node <= n;i++)
             {
                 iteratorloop(graph[curr_node], v)
                 {
@@ -764,7 +431,7 @@ struct shortestPath
     bool negativeCycle = false;
     void checkNegCycle(int src)
     {
-        loop(curr_node, 1, n, 1)
+        for(int curr_node = 1;curr_node <= n;curr_node++)
         {
             iteratorloop(graph[curr_node], v)
             {
@@ -787,10 +454,10 @@ struct shortestPath
 struct findCycles
 {
     int n, m;
-    vv(int) graph;
-    vi par, vis, cyclepar;
-    vpii storage;
-    v(bool) recStack;
+    vector<vector<int>> graph;
+    vector<int> par, vis, cyclepar;
+    vector<pair<int,int>> storage;
+    vector<bool> recStack;
     dsu st;
 
     findCycles()
@@ -798,7 +465,7 @@ struct findCycles
         cin >> n >> m;
         graph.resize(n + 1);
 
-        loop(i, 0, m - 1, 1)
+        for(int i = 0;i<m;i++)
         {
             int x, y;
             cin >> x >> y;
@@ -828,7 +495,7 @@ struct findCycles
     {
         vis[u] = true;
         recStack[u] = true;
-        iteratorloop(graph[u], i)
+        for(auto i = graph[u].begin();i!=graph[u].end();i++)
         {
             int v = val(i);
             if (v == p)
@@ -875,7 +542,7 @@ struct findCycles
             recStack[u] = true;
 
             // Recur for all the vertices adjacent to this vertex
-            iteratorloop(graph[u], i)
+            for(auto i = graph[u].begin();i!=graph[u].end();i++)
             {
                 int v = val(i);
                 if ((!vis[v] && isCyclicUtil(v)) || recStack[v])
@@ -899,9 +566,9 @@ Kosaraju's algorithm
 struct kosaraju
 {
     int n;
-    v(v(int)) graph, trgraph;
-    v(int) cost, od;
-    v(bool) vis;
+    vector<vector<int>> graph, trgraph;
+    vector<int> cost, od;
+    vector<bool> vis;
     stack<int> scc;
     kosaraju()
     {
@@ -912,19 +579,18 @@ struct kosaraju
         cost.resize(n + 1, -1);
         vis.resize(n + 1, false);
 
-        loop(i, 1, n, 1)
-                cin >>
-            cost[i];
+        for(int i = 1;i<=n;i++)
+            cin >> cost[i];
         cin >> m;
         int x, y;
-        loop(i, 1, m, 1)
+        for(int i = 1;i<=m;i++)
         {
             cin >> x >> y;
             graph[x].push_back(y);
             trgraph[y].push_back(x);
         }
 
-        loop(i, 1, n, 1)
+        for(int i = 1;i<=n;i++)
         {
             if (vis[i] == false)
                 dfs(i);
@@ -933,7 +599,7 @@ struct kosaraju
         reverse(od.begin(), od.end());
         vis.assign(n + 1, false);
         trdfs(val(od.begin()));
-        iteratorloop(od, i)
+        for(auto i = od.begin();i!=od.end();i++)
         {
             int v = val(i);
             if (vis[v] == false)
@@ -952,13 +618,13 @@ struct kosaraju
             cout << scc.top() << " ";
             scc.pop();
         }
-        newline;
+        cout<<"\n";
     }
 
     void dfs(int u)
     {
         vis[u] = true;
-        iteratorloop(graph[u], i)
+        for(auto i = graph[u].begin();i!=graph[u].end();i++)
         {
             int v = val(i);
             if (vis[v] == false)
@@ -969,7 +635,7 @@ struct kosaraju
     void trdfs(int u)
     {
         vis[u] = true;
-        iteratorloop(trgraph[u], i)
+        for(auto i = trgraph[u].begin();i != trgraph[u].end();i++)
         {
             int v = val(i);
             if (vis[v] == false)
@@ -984,7 +650,7 @@ struct kosaraju
 
 class dsu
 {
-    um(int, int) parent, size;
+    map<int,int> parent, size;
 
 public:
     // making new set by just initialising the parent of set as the same number
