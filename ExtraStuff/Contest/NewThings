@@ -1,0 +1,5 @@
+We can subtract iterators of vectors but not of set
+sort(arr, arr + N, less<int>()); // increasing order sort
+sort(arr, arr + N, greater<int>()); // decreasing order sort
+// less_equal<int>()
+// greater_equal<int>()

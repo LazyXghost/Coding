@@ -1,1 +1,0 @@
-{"name":"Local: largest_rectangular_area","url":"/home/rb/Desktop/Files/Coding/Useful_codes/largest_rectangular_area.cpp","tests":[{"id":1625731994803,"input":"1\n5\n1 2 3 4 5","output":"9"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/rb/Desktop/Files/Coding/Useful_codes/largest_rectangular_area.cpp","group":"local","local":true}
