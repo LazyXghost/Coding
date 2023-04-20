@@ -301,8 +301,8 @@
 			"template <class T, class V> void _print(unordered_map <T, V> v) {cerr << \"[ \"; for (auto i : v) {cerr<< \"(\";_print(i.first); cerr << \"--> \"; _print(i.second);cerr<< \"),\";} cerr << \"]\";}",
 			"",
 		],
-		"description": "brackets for django",
-		"scope": "django-html"
+		"description": "Debugger for cpp",
+		"scope": "cpp"
 	},
 	"django code snippet for code block": {
 		"prefix": "percentBrackets",
