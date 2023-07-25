@@ -8,7 +8,9 @@
 		"files.associations": {
 			"*.ejs": "html",
 			"*.html": "django-html",
-			"vector": "cpp"
+			"vector": "cpp",
+			"bitset": "cpp",
+			"chrono": "cpp"
 		}
 	}
 }
